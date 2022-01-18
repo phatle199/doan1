@@ -1,15 +1,17 @@
 const express = require('express');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
 
-dotenv.config({ path: `${__dirname}/config.env` });
+const router = require('./routes');
+
 const app = express();
+
+// Body parser
+app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`Server is running at ${port}`);
-});
+router(app);
+
+module.exports = app;

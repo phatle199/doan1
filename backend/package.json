@@ -4,13 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "start:prod": "SET NODE_ENV=production&nodemon app.js"
+    "start": "nodemon server.js",
+    "start:prod": "SET NODE_ENV=production&nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "mongoose": "^6.1.7"
   },
   "devDependencies": {
     "dotenv": "^14.2.0",
