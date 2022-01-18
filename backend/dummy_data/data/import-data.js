@@ -1,59 +1,60 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
 const Tour = require('../../models/tourModel');
-const User = require('../../models/userModel');
-const Review = require('../../models/reviewModel');
 
-dotenv.config({ path: './config.env' });
+// console.log(`${__dirname}/../config.env`);
+dotenv.config({ path: `${__dirname}/../../config.env` });
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
+const app = require('../../app');
+
+const db = process.env.DB_CONNECTION_STRING.replace(
+  '<password>',
+  process.env.DB_PASSWORD
 );
 
 mongoose
-  .connect(DB, {
-    useCreateIndex: true,
-    useFindAndModify: true,
+  .connect(db, {
+    autoIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('DB connection successful!'));
+  .then(() => console.log('DB connection succesful!'));
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
-const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
-const reviews = JSON.parse(
-  fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
+const port = process.env.PORT || 4000;
+app.listen(port, () => {
+  console.log(`Server is running at ${port}`);
+});
+
+const DUMMY_TOURS = JSON.parse(
+  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
 );
 
-const importData = async () => {
+const importDummyData = async (DUMMY_DATA) => {
   try {
-    await Tour.create(tours, { validateBeforeSave: false });
-    await User.create(users, { validateBeforeSave: false });
-    await Review.create(reviews, { validateBeforeSave: false });
-    console.log('Data successfully loaded!');
-  } catch (error) {
-    console.log(error.errmsg);
+    await Tour.create(DUMMY_DATA);
+    console.log('Imported dummy data successfully 👍');
+  } catch (err) {
+    console.log('Something went wrong when importing data 💥', err);
   }
-  process.exit();
+  process.exit(1);
 };
 
-const deleteAllData = async () => {
+const deleteDataFromACollections = async () => {
   try {
     await Tour.deleteMany();
-    await User.deleteMany();
-    await Review.deleteMany();
-    console.log('Data successfully deleted!');
-  } catch (error) {
-    console.log(error.errmsg);
+    console.log('Deleted data successfully 👍');
+  } catch (err) {
+    console.log('Something went wrong when deleting data 💥', err);
   }
-  process.exit();
+  process.exit(1);
 };
 
 if (process.argv[2] === '--import') {
-  importData();
+  importDummyData(DUMMY_TOURS);
 } else if (process.argv[2] === '--delete') {
-  deleteAllData();
+  deleteDataFromACollections();
+} else {
+  console.log('Invalid action 🙁');
+  process.exit(1);
 }

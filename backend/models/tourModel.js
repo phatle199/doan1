@@ -15,7 +15,7 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'Độ khó là bắt buộc.'],
     enum: {
       values: ['easy', 'medium', 'difficult'],
-      message: 'Độ khó phải là easy hoặc medium hoặc khó',
+      message: 'Độ khó phải là easy hoặc medium hoặc difficulty',
     },
   },
   ratingsAverage: {
