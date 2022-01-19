@@ -5,10 +5,13 @@ const tourSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Tên tour là bắt buộc.'],
     unique: true,
+    trim: true,
+    maxlength: 100,
   },
   duration: {
     type: Number,
     required: [true, 'Số ngày là bắt buộc.'],
+    min: [1, 'Số ngày trong một tour ít nhất phải là 1 ngày'],
   },
   difficulty: {
     type: String,
@@ -32,19 +35,22 @@ const tourSchema = new mongoose.Schema({
   },
   imageCover: {
     type: String,
-    required: [true, 'Một tour phải có 1 ảnh bìa.'],
+    required: [true, 'Một tour phải có một ảnh bìa.'],
   },
   maxGroupSize: {
     type: Number,
     required: [true, 'Một tour phải có số lượng người tham gia tối đa'],
+    min: [1, 'Một nhóm phải có ít nhất một người tham gia'],
   },
   price: {
     type: Number,
     required: [true, 'Một tour phải có giá'],
+    min: [0, 'Giá không thể âm'],
   },
   summary: {
     type: String,
     required: [true, 'Một tour phải có tóm tắt'],
+    minlength: 10,
   },
   description: {
     type: String,
