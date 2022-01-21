@@ -11,7 +11,7 @@ const tourSchema = new mongoose.Schema({
   duration: {
     type: Number,
     required: [true, 'Số ngày là bắt buộc.'],
-    min: [1, 'Số ngày trong một tour ít nhất phải là 1 ngày'],
+    min: [1, 'Số ngày của một tour ít nhất phải là 1'],
   },
   difficulty: {
     type: String,
