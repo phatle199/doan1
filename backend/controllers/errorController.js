@@ -17,6 +17,10 @@ const handleValidatorError = (err) => {
   return new AppError(`${err.errors[Object.keys(err.errors)[0]]}`, 400);
 };
 
+const handleJsonWebTokenError = (err) => {
+  return new AppError('Invalid json web token. Please try again!', 401);
+};
+
 const sendErrorDev = (err, req, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -48,11 +52,13 @@ exports.globalErrorHandler = (err, req, res, next) => {
 
   if (process.env.NODE_ENV === 'production') {
     let error = Object.assign(err); // clone ra 1 object error, dùng let vì cần gán lại
-    // console.log('Error name: ', error);
+    // console.log(error.name);
     if (error.name === 'CastError') error = handleCastError(error);
     if (error.code === 11000) error = handleDuplicateError(error);
-    if (error._message.includes('validation failed'))
+    if (error._message && error._message.includes('validation failed'))
       error = handleValidatorError(error);
+    if (error.name === 'JsonWebTokenError')
+      error = handleJsonWebTokenError(error);
     return sendErrorProd(error, req, res);
   }
 
