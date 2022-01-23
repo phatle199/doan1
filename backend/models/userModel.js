@@ -1,5 +1,7 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -10,6 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide your email'],
     unique: true,
+    validate: [validator.isEmail, 'Please provide a valid email'],
   },
   password: {
     type: String,
@@ -40,6 +43,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  resetPasswordToken: {
+    type: String,
+  },
+  resetPasswordTokenExpiresIn: {
+    type: Date,
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -69,10 +78,27 @@ userSchema.methods.enteredPasswordIsCorrect = async (
 };
 
 userSchema.methods.passwordChangedAfter = function (tokenIssuedAt) {
-  const passwordChangedAt = this.passwordChangedAt;
-  console.log(passwordChangedAt);
-  console.log(tokenIssuedAt);
+  if (this.passwordChangedAt) {
+    const passwordChangedAt = new Date(this.passwordChangedAt).getTime() / 1000;
+    return passwordChangedAt > tokenIssuedAt;
+  }
+
   return false;
+};
+
+userSchema.methods.createResetPasswordToken = function () {
+  // Tạo reset password token bằng module crypto của nodejs
+  const resetPasswordToken = crypto.randomBytes(32).toString('hex');
+
+  // Hash và Lưu reset password token và thời hạn của token đó vào database
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetPasswordToken)
+    .digest('hex');
+
+  this.resetPasswordTokenExpiresIn = Date.now() + 10 * 60 * 1000;
+
+  return resetPasswordToken;
 };
 
 const User = mongoose.model('User', userSchema);

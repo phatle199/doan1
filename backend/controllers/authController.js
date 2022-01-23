@@ -1,8 +1,10 @@
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const sendEmail = require('../utils/email');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -21,12 +23,12 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   user.password = undefined;
 
-  const json = generateToken(user._id);
+  const token = generateToken(user._id);
 
   res.status(201).json({
     status: 'success',
     user,
-    json,
+    token,
   });
 });
 
@@ -55,11 +57,11 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // Generate and send token
-  const json = generateToken(user._id);
+  const token = generateToken(user._id);
 
   res.status(200).json({
     status: 'success',
-    json,
+    token,
   });
 });
 
@@ -99,4 +101,116 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   req.user = currentUser;
   next();
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action.', 401)
+      );
+    }
+    next();
+  };
+};
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+  // 1. Getting user by email and check if user exists
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new AppError('No user found with that email', 400));
+  }
+
+  // 2. Create reset password token
+  const resetPasswordToken = user.createResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+
+  // 3. Send reset password token to user
+  try {
+    const resetPasswordUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/reset-password/${resetPasswordToken}`;
+
+    const subject = 'Your reset password token (will expire in 10 minutes).';
+    const text = `Hi ${user.name}!.\nHave you forgotten your password? If yes, click the following url to set new password. Otherwise, please ignore this email.\n${resetPasswordUrl}`;
+    await sendEmail(user, subject, text);
+
+    // 4. Response
+    res.status(200).json({
+      status: 'success',
+      message: 'Token was sent to your email',
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(500).json({
+      status: 'error',
+      message: 'Could not send email. Please try again later.',
+    });
+  }
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // Getting and hash resetPasswordToken
+  let { resetPasswordToken } = req.params;
+  resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetPasswordToken)
+    .digest('hex');
+
+  // Getting user via resetPasswordToken
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordTokenExpiresIn: { $gt: Date.now() },
+  });
+
+  // Check if resetPasswordToken was expired or invalid
+  if (!user) {
+    return next(
+      new AppError(
+        'Your reset password token was expired or invalid. Please try again!',
+        401
+      )
+    );
+  }
+
+  // Set new password
+  const { password, passwordConfirm } = req.body;
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordTokenExpiresIn = undefined;
+  await user.save();
+
+  // Log the user in
+  const token = generateToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+});
+
+exports.updateMyPassword = catchAsync(async (req, res, next) => {
+  const { passwordCurrent, password, passwordConfirm } = req.body;
+  const user = await User.findOne({ email: req.user.email }).select('password');
+
+  if (!(await user.enteredPasswordIsCorrect(passwordCurrent, user.password))) {
+    return next(
+      new AppError('Your current password is incorrect. Please try again!', 401)
+    );
+  }
+
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+
+  const token = generateToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
 });
