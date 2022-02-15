@@ -34,6 +34,15 @@ exports.updateMyData = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  res.status(201).json({
+    status: 'success',
+    user,
+  });
+});
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 

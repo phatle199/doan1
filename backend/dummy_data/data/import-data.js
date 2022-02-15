@@ -27,7 +27,7 @@ app.listen(port, () => {
 });
 
 const DUMMY_TOURS = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/tours.json`, 'utf-8')
 );
 
 const importDummyData = async (DUMMY_DATA) => {

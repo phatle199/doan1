@@ -12,6 +12,28 @@ const generateToken = (id) => {
   });
 };
 
+const createAndSendToken = (user, res, statusCode) => {
+  const token = generateToken(user._id);
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: user,
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, photo } = req.body;
   const user = await User.create({
@@ -23,13 +45,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   user.password = undefined;
 
-  const token = generateToken(user._id);
-
-  res.status(201).json({
-    status: 'success',
-    user,
-    token,
-  });
+  createAndSendToken(user, res, 201);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -41,7 +57,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // Getting user by email
-  const user = await User.findOne({ email }).select('password');
+  const user = await User.findOne({ email }).select('+password');
 
   // Check if password is correct or user is not exists
   if (
@@ -57,12 +73,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // Generate and send token
-  const token = generateToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendToken(user, res, 200);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -187,11 +198,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // Log the user in
-  const token = generateToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendToken(user, res, 200);
 });
 
 exports.updateMyPassword = catchAsync(async (req, res, next) => {
@@ -208,9 +215,5 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = passwordConfirm;
   await user.save();
 
-  const token = generateToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendToken(user, res, 200);
 });

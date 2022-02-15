@@ -61,11 +61,29 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'Một tour phải có các ngày bắt đầu'],
   },
   startLocation: {
-    type: String,
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: [Number],
+    address: String,
+    description: String,
+    day: Number,
   },
-  locations: {
-    type: [String],
-  },
+  locations: [
+    {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+      day: Number,
+    },
+  ],
   // guides: {
 
   // },
