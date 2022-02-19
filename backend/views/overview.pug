@@ -1,0 +1,14 @@
+extends base
+
+block content
+  div(class='container')
+    div(class='row my-5 justify-content-between' style="height: 371px;")
+      each tour in tours
+        div(class='col-4 my-3')
+          div(class="card" style="min-height: 370px;")
+            img(class="card-img-top" style="height: 167px" src=`/img/tours/${tour.imageCover}` alt=`${tour.name}`)
+            div(class="card-body")
+              h5(class="card-title")= tour.name
+              p(class="card-text")= tour.summary
+              a(href=`/tour/${tour._id}` class="btn btn-primary float-right") Details &rarr;
+  

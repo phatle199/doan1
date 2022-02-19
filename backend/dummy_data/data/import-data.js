@@ -1,7 +1,9 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+
 const Tour = require('../../models/tourModel');
+const User = require('../../models/userModel');
 
 // console.log(`${__dirname}/../config.env`);
 dotenv.config({ path: `${__dirname}/../../config.env` });
@@ -30,9 +32,15 @@ const DUMMY_TOURS = JSON.parse(
   fs.readFileSync(`${__dirname}/tours.json`, 'utf-8')
 );
 
-const importDummyData = async (DUMMY_DATA) => {
+const DUMMY_USERS = JSON.parse(
+  fs.readFileSync(`${__dirname}/users.json`, 'utf-8')
+);
+
+const importDummyData = async () => {
   try {
-    await Tour.create(DUMMY_DATA);
+    await User.create(DUMMY_USERS, { validateBeforeSave: false });
+    await Tour.create(DUMMY_TOURS, { validateBeforeSave: false });
+
     console.log('Imported dummy data successfully 👍');
   } catch (err) {
     console.log('Something went wrong when importing data 💥', err);
@@ -43,6 +51,7 @@ const importDummyData = async (DUMMY_DATA) => {
 const deleteDataFromACollections = async () => {
   try {
     await Tour.deleteMany();
+    await User.deleteMany();
     console.log('Deleted data successfully 👍');
   } catch (err) {
     console.log('Something went wrong when deleting data 💥', err);
@@ -51,7 +60,7 @@ const deleteDataFromACollections = async () => {
 };
 
 if (process.argv[2] === '--import') {
-  importDummyData(DUMMY_TOURS);
+  importDummyData();
 } else if (process.argv[2] === '--delete') {
   deleteDataFromACollections();
 } else {
