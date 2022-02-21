@@ -35,7 +35,7 @@ const tourSchema = new mongoose.Schema({
   },
   imageCover: {
     type: String,
-    required: [true, 'Một tour phải có một ảnh bìa.'],
+    // required: [true, 'Một tour phải có một ảnh bìa.'],
   },
   maxGroupSize: {
     type: Number,

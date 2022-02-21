@@ -1,0 +1,27 @@
+extends ../account
+
+block userview
+  p(class="text-center display-4") LIST OF TOURS
+
+  table(class="table table-hover")
+      thead(class="thead-dark")
+        th #
+        th Name
+        th Duration
+        th Price
+        th Difficulty
+        th
+      tbody
+        - let i = 0;
+        each tour in tours
+          - i++;
+          tr
+            td= i
+            td= tour.name
+            td= tour.duration
+            td= tour.price
+            td= tour.difficulty[0].toUpperCase() + tour.difficulty.slice(1)
+            td(class="d-flex justify-content-around")
+              a(href=`/manage-tours/${tour._id}` class="btn btn-info") Details
+              button(id="btn-delete-tour" class="btn btn-danger text-white" data-tourid=`${tour._id}`) Delete
+  a(class="btn btn-link btn-primary float-right" href="/manage-tours/add") Add New Tour

@@ -29,7 +29,11 @@ router
 router
   .route('/:userId')
   .get(userController.getUser)
-  .patch(userController.updateUser)
+  .patch(
+    userController.uploadUserImage,
+    userController.resizeUserImage,
+    userController.updateUser
+  )
   .delete(userController.deleteUser);
 
 module.exports = router;

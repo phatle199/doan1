@@ -1,0 +1,28 @@
+extends account
+
+block userview
+  form(class="my-5 ml-3")
+    h4(class="mb-3 text-center") YOUR ACCOUNT SETTINGS
+    div(class="form-group")
+      label(for="email") Email address
+      input(type="email" class="form-control" id="email" value=`${user.email}`)
+    div(class="form-group")
+      label(for="name") Name
+      input(type="name" class="form-control" id="name" value=`${user.name}`)
+    //- div(class="form-group")
+    //-   label(for="name") Photo
+    //-   input(type="name" class="form-control" id="name" placeholder=`${user.name}`)
+    button(type="submit" class="btn btn-success") Save
+
+  form(class="my-5 ml-3")
+    h4(class="mb-3 text-center") PASSWORD CHANGE
+    div(class="form-group")
+      label(for="current-password") Current password
+      input(type="password" class="form-control" id="current-password" placeholder="********")
+    div(class="form-group")
+      label(for="new-password") New password
+      input(type="password" class="form-control" id="new-password" placeholder="********")
+    div(class="form-group")
+      label(for="confirm-password") Confirm password
+      input(type="password" class="form-control" id="confirm-password" placeholder="********")
+    button(type="submit" class="btn btn-success") Save

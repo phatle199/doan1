@@ -1,0 +1,42 @@
+extends ../account
+
+block userview
+  form(class="my-5 ml-3" id="change-user-form")
+    h4(class="mb-3 text-center")= `${selectedUser.name}`
+
+    // FILE UPLOAD INPUT
+    div(class="m-auto d-flex justify-content-center col-sm-6")
+      img(src=`/img/users/${selectedUser.photo}` id="preview" class="img-thumbnail w-50 h-50")
+    label(for="photo") Photo
+    input(type="file" name="img[]" accept="image/*" id="photo" style="visibility: hidden;position: absolute;")
+    div(class="input-group mb-3 ")
+      input(type="text" class="form-control" disabled placeholder="Upload File" id="file")
+      div(class="input-group-append")
+        button(type="button" class="browse btn btn-dark") Browse...
+
+    div(class="form-group")
+      label(for="user-id") Id
+      input(type="text" class="form-control" id="user-id" value=`${selectedUser._id}` disabled)
+    div(class="form-group")
+      label(for="name") Name
+      input(type="text" class="form-control" id="name" value=`${selectedUser.name}`)
+    div(class="form-group")
+      label(for="email") Email Address
+      input(type="email" class="form-control" id="email" value=`${selectedUser.email}`)
+    div(class="form-group")
+      label(for="password") Password
+      input(type="password" class="form-control" id="password" placeholder="********")
+    div(class="form-group")
+      label(for="passwordChangedAt") Password Changed At
+      - const passwordChangedAt = selectedUser.passwordChangedAt ? selectedUser.passwordChangedAt.toISOString().split('T')[0] : undefined;
+      input(type="date" class="form-control" id="passwordChangedAt" value=`${passwordChangedAt}` disabled)
+    div(class="form-group")
+      label(for="role") Role
+      select(class="form-control" id="role" name="role")
+        option(selected)= selectedUser.role
+        - const roles = ['admin', 'lead-guide', 'guide', 'user'];
+        each role in roles
+          - const notSelectedYet = role !== selectedUser.role
+          if notSelectedYet
+            option(value=`${role}`)= role
+    button(id="btn-save-user-changes" type="submit" class="btn btn-success btn-block") Save changes

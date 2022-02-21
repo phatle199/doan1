@@ -1,0 +1,52 @@
+extends ../account
+
+block userview
+  form(class="my-5 ml-3" id="change-tour-form")
+    h4(class="mb-3 text-center")= `${tour.name} Details`
+    div(class="form-group")
+      label(for="tour-id") Id
+      input(type="text" class="form-control" id="tour-id" value=`${tour._id}` disabled)
+    div(class="form-group")
+      label(for="name") Name
+      input(type="text" class="form-control" id="name" value=`${tour.name}`)
+    div(class="form-group")
+      label(for="price") Price
+      input(type="number" class="form-control" id="price" value=`${tour.price}`)
+    div(class="form-group")
+      label(for="duration") Duration
+      input(type="number" class="form-control" id="duration" value=`${tour.duration}`)
+    div(class="form-group")
+      label(for="difficulty") Difficulty
+      select(class="form-control" id="difficulty" name="difficulty")
+        option(selected)= tour.difficulty
+        - const options = ['easy', 'medium', 'difficult'];
+        each option in options
+          - const notSelectedYet = option !== tour.difficulty
+          if notSelectedYet
+            option= option
+    div(class="form-group")
+      label(for="maxGroupSize") Max Group Size
+      input(type="number" class="form-control" id="maxGroupSize" value=`${tour.maxGroupSize}`)
+    //- div(class="form-group")
+    //-   label(for="image-cover") Image Cover
+    //-   input(type="file" class="form-control" id="image-cover" value=`${tour.imageCover}`)
+    div(class="form-group")
+      label(for="ratingsAverage") Ratings Average
+      input(type="number" class="form-control" id="ratingsAverage" value=`${tour.ratingsAverage}` disabled)
+    div(class="form-group")
+      label(for="ratingsQuantity") Ratings Quantity
+      input(type="number" class="form-control" id="ratingsQuantity" value=`${tour.ratingsQuantity}` disabled)
+    div(class="form-group")
+      label(for="summary") Summary
+      input(type="text" class="form-control" id="summary" value=`${tour.summary}`)
+    div(class="form-group")
+      label(for="description") Description
+      textarea(class="form-control" rows="5" id="description" name="description" style="resize:none;")= tour.description
+    div(class="form-group")
+      label(for="guides") Guides
+      select(class="form-control" id="guides" name="guides" multiple)
+        each selectedGuide in selectedGuides
+          option(selected value=`${selectedGuide._id}`)= selectedGuide.name
+        each guide in restOfTourGuides
+          option(value=`${guide._id}`)= guide.name
+    button(id="btn-save-tour-changes" type="submit" class="btn btn-success") Save changes

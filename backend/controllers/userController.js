@@ -1,7 +1,40 @@
+const bcrypt = require('bcrypt');
+const multer = require('multer');
+const sharp = require('sharp');
 const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
+// Configuring multer
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) return cb(null, true);
+  cb(new AppError('Not an image! Please upload an image.', 400), false);
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserImage = upload.single('photo');
+
+exports.resizeUserImage = async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`);
+
+  next();
+};
+
+// Lọc bỏ các cột người dùng không được phép thay đổi
 const filterUpdateFields = (filterObject, ...allowedFields) => {
   const filteredObject = {};
   allowedFields.forEach((el) => (filteredObject[el] = filterObject[el]));
@@ -83,9 +116,15 @@ exports.createUser = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
+  console.log(req.body);
 
   if (req.body.password) {
+    req.body.password = await bcrypt.hash(req.body.password, 12);
     req.body.passwordChangedAt = Date.now();
+  }
+
+  if (req.file) {
+    req.body.photo = req.file.filename;
   }
 
   const user = await User.findByIdAndUpdate(userId, req.body);

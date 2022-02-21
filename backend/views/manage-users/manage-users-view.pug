@@ -1,0 +1,27 @@
+extends ../account
+
+block userview
+  p(class="text-center display-4") LIST OF USERS
+
+  table(class="table table-hover")
+      thead(class="thead-dark")
+        th #
+        th Name
+        th Email Address
+        th Role
+        th Active
+        th
+      tbody
+        - let i = 0;
+        each user in users
+          - i++;
+          tr
+            td= i
+            td= user.name
+            td= user.email
+            td= user.role
+            td= `${user.active ? 'yes' : 'no'}`
+            td(class="d-flex justify-content-around")
+              a(href=`/manage-users/${user._id}` class="btn btn-info") Details
+              a(id="btn-delete-user" class="btn btn-danger text-white" data-userid=`${user._id}`)  Delete
+  a(class="btn btn-link btn-primary float-right" href="/manage-users/add") Add New User

@@ -59,6 +59,12 @@ exports.createTour = catchAsync(async (req, res, next) => {
 exports.updateTour = catchAsync(async (req, res, next) => {
   const { tourId } = req.params;
 
+  // if (typeof req.body.guides === 'string') {
+  //   req.body.guides = req.body.guides.split(',');
+  // }
+
+  // console.log(req.body);
+
   const tour = await Tour.findByIdAndUpdate(tourId, req.body, {
     new: true,
     runValidators: true,

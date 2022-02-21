@@ -1,0 +1,25 @@
+extends ../account
+
+block userview
+  form(class="my-5 ml-3" id="add-new-user-form")
+    h4(class="mb-3 text-center") ADD NEW USER
+    div(class="form-group")
+      label(for="name") Name
+      input(type="text" class="form-control" id="name")
+    div(class="form-group")
+      label(for="email") Email Address
+      input(type="email" class="form-control" id="email")
+    div(class="form-group")
+      label(for="password") Password
+      input(type="password" class="form-control" id="password")
+    div(class="form-group")
+      label(for="passwordConfirm") Password Confirm
+      input(type="password" class="form-control" id="passwordConfirm")
+    div(class="form-group")
+      label(for="role") Role
+      select(class="form-control" id="role" name="role")
+        option(value="admin") admin
+        option(value="lead-guide") lead-guide
+        option(value="guide") guide
+        option(value="user" selected) user
+    button(id="btn-addd-user" type="submit" class="btn btn-success") Add
