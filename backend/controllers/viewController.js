@@ -20,8 +20,14 @@ exports.getTour = async (req, res, next) => {
 };
 
 exports.getLoginForm = (req, res, next) => {
-  res.status(200).render('login', {
+  res.status(200).render('auth/login', {
     title: 'Login',
+  });
+};
+
+exports.getSignupForm = (req, res, next) => {
+  res.status(200).render('auth/signup', {
+    title: 'Signup',
   });
 };
 

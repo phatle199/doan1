@@ -45,7 +45,7 @@ const tourSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, 'Một tour phải có giá'],
-    min: [0, 'Giá không thể âm'],
+    min: [1, 'Giá không thể âm'],
   },
   summary: {
     type: String,
@@ -84,12 +84,15 @@ const tourSchema = new mongoose.Schema({
       day: Number,
     },
   ],
-  guides: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    },
-  ],
+  guides: {
+    type: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
+    required: [true, 'A tour must have at least one guide'],
+  },
   // reviews: {
 
   // },

@@ -1,8 +1,9 @@
 import '@babel/polyfill';
-import { login } from './login';
-import { logout } from './login';
+import { login, logout, signup } from './auth';
 import { addOneDocument, updateOneDocument, deleteOneDocument } from './crud';
+import fillOutTheForm from './helpers/fillOutTheForm';
 
+const signupForm = document.querySelector('#signup-form');
 const loginForm = document.querySelector('#login-form');
 const logoutBtn = document.querySelector('#log-out-btn');
 
@@ -14,31 +15,18 @@ const changeUserForm = document.querySelector('#change-user-form');
 const addNewUserForm = document.querySelector('#add-new-user-form');
 const deleteUserBtn = document.querySelectorAll('#btn-delete-user');
 
-const fillOutTheForm = (form, entity, ...fields) => {
-  const excludedFields = ['guides', 'photo'];
-  fields.forEach((field) => {
-    // Nêu input là kiểu select (như guides) thì bỏ qua
-    if (!excludedFields.includes(field)) {
-      form.append(`${field}`, document.querySelector(`#${field}`).value);
-    }
-  });
-
-  // Nêu điền form tours thì có multiple select như guides
-  if (entity === 'tours') {
-    const selectedGuides = [];
-    for (const option of document.querySelector('#guides').options) {
-      if (option.selected) selectedGuides.push(option.value);
-    }
-    form.append('guides', JSON.stringify(selectedGuides));
-  }
-
-  // Nếu có upload file hình ảnh
-  if (fields.includes('photo') && document.querySelector('#photo').files[0]) {
-    form.append('photo', document.querySelector('#photo').files[0]);
-  }
-};
-
 // AUTH
+if (signupForm) {
+  signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.querySelector('#name').value;
+    const email = document.querySelector('#email').value;
+    const password = document.querySelector('#password').value;
+    const passwordConfirm = document.querySelector('#passwordConfirm').value;
+    signup(name, email, password, passwordConfirm);
+  });
+}
+
 if (loginForm) {
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();

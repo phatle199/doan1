@@ -1,4 +1,5 @@
 import axios from 'axios';
+import catchAsync from './helpers/catchAsync';
 
 const transformInputData = (data) => {
   const result = {};
@@ -12,26 +13,22 @@ const transformInputData = (data) => {
   return result;
 };
 
-export const addOneDocument = async (data, entity) => {
-  try {
-    const transformedInputData = transformInputData(data);
+export const addOneDocument = catchAsync(async (data, entity) => {
+  const transformedInputData = transformInputData(data);
 
-    const url = `http://127.0.0.1:5000/api/v1/${entity}`;
+  const url = `http://127.0.0.1:5000/api/v1/${entity}`;
 
-    const res = await axios({
-      method: 'POST',
-      url,
-      data: transformedInputData,
-    });
+  const res = await axios({
+    method: 'POST',
+    url,
+    data: transformedInputData,
+  });
 
-    if (res.data.status === 'success') {
-      alert(`Added success!`);
-      location.assign(`/manage-${entity}`);
-    }
-  } catch (error) {
-    alert(error.response.data.message);
+  if (res.data.status === 'success') {
+    alert(`Added success!`);
+    location.assign(`/manage-${entity}`);
   }
-};
+});
 
 export const updateOneDocument = async (data, id, entity) => {
   try {

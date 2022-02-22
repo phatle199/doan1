@@ -1,0 +1,31 @@
+extends ../base
+
+block content
+  .container.my-4
+    .row.justify-content-center
+      .card.col-5
+        article.card-body
+          h4.card-title.text-center.mb-4.mt-1 Log in
+          hr
+          p.text-success.text-center LOG INTO YOUR ACCOUNT
+          form#login-form
+            p.text-center.text-danger#commonError
+            .form-group
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fa.fa-user
+                input.form-control#email(name="email" placeholder="you@example.com" type="email")
+
+            .form-group
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fa.fa-lock
+                input.form-control#password(name="password" placeholder="********" type="password")
+
+            .form-group
+              button.btn.btn-primary.btn-block Login
+
+            p.text-center
+              a.btn(href="#") Forgot password?

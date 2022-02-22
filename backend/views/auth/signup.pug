@@ -1,0 +1,47 @@
+extends ../base
+
+block content
+  .container.my-4
+    .row.justify-content-center
+      .card.col-5
+        article.card-body
+          h4.card-title.text-center.mb-4.mt-1 Sign up
+          hr
+          p.text-success.text-center CREATE NEW ACCOUNT
+          form#signup-form
+            .form-group
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fa.fa-id-card
+                input.form-control#name(name="name" placeholder="Carl Johnson" type="text")
+                .invalid-feedback
+
+            .form-group
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fa.fa-user
+                input.form-control#email(name="email" placeholder="you@example.com" type="email")
+                .invalid-feedback
+
+            .form-group
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fa.fa-lock
+                input.form-control#password(name="password" placeholder="********" type="password")
+                .invalid-feedback
+
+            .form-group
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fa.fa-check
+                input.form-control#passwordConfirm(name="passwordConfirm" placeholder="********" type="password")
+                .invalid-feedback
+
+            .form-group
+              button.btn.btn-primary.btn-block Signup
+            p.text-center
+              a.btn(href="/login") Already have an account? Login now.

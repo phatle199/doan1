@@ -1,38 +1,54 @@
 extends ../account
 
 block userview
-  form(class="my-5 ml-3" id="add-new-tour-form")
-    h4(class="mb-3 text-center") ADD NEW TOUR
-    div(class="form-group")
+  form.my-5.ml-3#add-new-tour-form
+    h4.mb-3.text-center ADD NEW TOUR
+    .form-group
       label(for="name") Name
-      input(type="text" class="form-control" id="name")
-    div(class="form-group")
+      input.form-control#name(type="text")
+      .invalid-feedback
+
+    .form-group
       label(for="price") Price
-      input(type="number" class="form-control" id="price")
-    div(class="form-group")
+      input.form-control#price(type="number")
+      .invalid-feedback
+
+    .form-group
       label(for="duration") Duration
-      input(type="number" class="form-control" id="duration")
-    div(class="form-group")
+      input.form-control#duration(type="number")
+      .invalid-feedback
+
+    .form-group
       label(for="difficulty") Difficulty
-      select(class="form-control" id="difficulty" name="difficulty")
+      select.form-control#difficulty(name="difficulty")
+        option(value="") --Choose a difficulty--
         option easy
         option medium
         option difficult
-    div(class="form-group")
+      .invalid-feedback
+
+    .form-group
       label(for="maxGroupSize") Max Group Size
-      input(type="number" class="form-control" id="maxGroupSize")
+      input.form-control#maxGroupSize(type="number")
+      .invalid-feedback
     //- div(class="form-group")
     //-   label(for="image-cover") Image Cover
     //-   input(type="file" class="form-control" id="image-cover" value=`${tour.imageCover}`)
-    div(class="form-group")
+    
+    .form-group
       label(for="summary") Summary
-      input(type="text" class="form-control" id="summary")
-    div(class="form-group")
+      input.form-control#summary(type="text")
+      .invalid-feedback
+    
+    .form-group
       label(for="description") Description
-      textarea(class="form-control" rows="5" id="description" name="description" style="resize:none;")
-    div(class="form-group")
+      textarea.form-control#description(rows="5" name="description" style="resize:none;")
+      .invalid-feedback
+    
+    .form-group
       label(for="guides") Guides
-      select(class="form-control" id="guides" name="guides" multiple)
+      select.form-control#guides(name="guides" multiple)
         each guide in guides
           option(value=`${guide._id}`)= guide.name
-    button(type="submit" class="btn btn-success") Add
+      .invalid-feedback
+    button.btn.btn-success(type="submit") Add
