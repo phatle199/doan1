@@ -3,7 +3,7 @@ extends ../account
 block userview
   p.text-center.display-4 LIST OF USERS
 
-  a.btn.btn-primary.mb-3(href="/manage-users/add") Add New User
+  a.btn.btn-primary.mb-3(href="/me/manage-users/add") Add New User
   table.table.table-hover
       thead.thead-dark
         th #
@@ -23,7 +23,7 @@ block userview
             td= user.role
             td= `${user.active ? 'yes' : 'no'}`
             td.d-flex.justify-content-around
-              a.btn.btn-info(href=`/manage-users/${user._id}`)
+              a.btn.btn-info(href=`/me/manage-users/${user._id}`)
                 span.fa-solid.fa-eye
               a.btn.btn-danger.text-white#btn-delete-user(data-userid=`${user._id}`)
                 span.fa-solid.fa-trash

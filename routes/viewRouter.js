@@ -16,12 +16,12 @@ router.use(
   authController.restrictTo('admin', 'lead-guide')
 );
 
-router.get('/manage-tours/add', viewController.getAddNewTourForm);
-router.get('/manage-tours/:tourId', viewController.getTourForm);
-router.get('/manage-tours', viewController.getManageToursView);
+router.get('/me/manage-tours/add', viewController.getAddNewTourForm);
+router.get('/me/manage-tours/:tourId', viewController.getTourForm);
+router.get('/me/manage-tours', viewController.getManageToursView);
 
-router.get('/manage-users/add', viewController.getAddNewUserForm);
-router.get('/manage-users/:userId', viewController.getUserForm);
-router.get('/manage-users', viewController.getManageUsersView);
+router.get('/me/manage-users/add', viewController.getAddNewUserForm);
+router.get('/me/manage-users/:userId', viewController.getUserForm);
+router.get('/me/manage-users', viewController.getManageUsersView);
 
 module.exports = router;

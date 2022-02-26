@@ -22,12 +22,14 @@ exports.getTour = async (req, res, next) => {
 exports.getLoginForm = (req, res, next) => {
   res.status(200).render('auth/login', {
     title: 'Login',
+    pathname: req.path,
   });
 };
 
 exports.getSignupForm = (req, res, next) => {
   res.status(200).render('auth/signup', {
     title: 'Signup',
+    pathname: req.path,
   });
 };
 
@@ -35,6 +37,7 @@ exports.getMe = (req, res, next) => {
   res.status(200).render('settings', {
     title: req.user.name,
     user: req.user,
+    pathname: req.path,
   });
 };
 
@@ -44,6 +47,7 @@ exports.getManageToursView = async (req, res, next) => {
     title: 'Manage Tours',
     user: req.user,
     tours,
+    pathname: req.path,
   });
 };
 
@@ -71,6 +75,7 @@ exports.getTourForm = async (req, res, next) => {
     tour,
     selectedGuides,
     restOfTourGuides,
+    pathname: req.path,
   });
 };
 
@@ -82,6 +87,7 @@ exports.getAddNewTourForm = async (req, res, next) => {
   res.status(200).render('manage-tours/add-new-tour', {
     title: 'Add New Tour',
     guides,
+    pathname: req.path,
   });
 };
 
@@ -91,6 +97,7 @@ exports.getManageUsersView = async (req, res, next) => {
     title: 'Manage Users',
     user: req.user,
     users,
+    pathname: req.path,
   });
 };
 
@@ -101,11 +108,13 @@ exports.getUserForm = async (req, res, next) => {
     title: selectedUser.name,
     user: req.user,
     selectedUser,
+    pathname: req.path,
   });
 };
 
 exports.getAddNewUserForm = (req, res) => {
   res.status(200).render('manage-users/add-new-user', {
     title: 'Add New User',
+    pathname: req.path,
   });
 };

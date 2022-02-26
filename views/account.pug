@@ -1,0 +1,60 @@
+extends base
+
+block content
+  div(class="container mt-5 bg-light rounded")
+    div(class="row" style="min-height: 740px;")
+      // SIDEBAR
+      div(class="col-3 bg-dark")
+        nav(class="navbar navbar-dark navbar-expand-md")
+          ul(class="my-4 navbar-nav flex-column flex-nowrap w-100")
+
+            // USER
+            li(class="nav-item")
+              a(class=`nav-link ${pathname === '/me' ? 'active' : ''}` href=`/me`)
+                i(class=`pr-3 py-2 fas fa-solid fa-gear`) 
+                span SETTINGS
+            
+            li(class="nav-item")
+              a(class=`nav-link ${pathname.includes('/my-bookings') ? 'active' : ''}` href=`/me/my-bookings`)
+                i(class=`pr-3 py-2 fas fa-solid fa-suitcase`)
+                span MY BOOKINGS
+
+            li(class="nav-item")
+              a(class=`nav-link ${pathname.includes('/my-reviews') ? 'active' : ''}` href=`/me/my-reviews`)
+                i(class="pr-3 py-2 fas fa-solid fa-star")
+                span MY REVIEWS
+
+            li(class="nav-item")
+              a(class=`nav-link ${pathname.includes('/my-billings') ? 'active' : ''}` href=`/me/my-billings`)
+                i(class="pr-3 py-2 fas fa-solid fa-wallet")
+                span BILLINGS
+            
+            // ADMIN
+            - const isAdmin = user.role === 'admin';
+            if isAdmin
+            
+              li(class="nav-item mt-4")
+                a(class=`nav-link ${pathname.includes('/manage-tours') ? 'active' : ''}` href="/me/manage-tours")
+                  i(class="pr-3 py-2 fas fa-solid fa-map")
+                  span MANAGE TOURS
+
+              li(class="nav-item")
+                a(class=`nav-link ${pathname.includes('/manage-users') ? 'active' : ''}` href="/me/manage-users")
+                  i(class="pr-3 py-2 fas fa-solid fa-user-group")
+                  span MANAGE USERS
+
+              li(class="nav-item")
+                a(class=`nav-link ${pathname.includes('/manage-reviews') ? 'active' : ''}` href="/me/manage-reviews")
+                  i(class="pr-3 py-2 fas fa-solid fa-star")
+                  span MANAGE REVIEWS
+
+              li(class="nav-item")
+                a(class=`nav-link ${pathname.includes('/manage-bookings') ? 'active' : ''}` href="/me/manage-bookings")
+                  i(class="pr-3 py-2 fas fa-solid fa-wallet")
+                  span MANAGE BOOKINGS
+
+      // USER VIEW CONTENT
+      div(class="col-9 my-5")
+        div(class="container")
+          block userview
+            h1 This is a place holder

@@ -3,7 +3,7 @@ extends ../account
 block userview
   p.text-center.display-4 LIST OF TOURS
 
-  a.btn.btn-primary.mb-3(href="/manage-tours/add") Add new tour
+  a.btn.btn-primary.mb-3(href="/me/manage-tours/add") Add new tour
   table.table.table-hover
       thead.thead-dark
         th #
@@ -23,7 +23,7 @@ block userview
             td= tour.price
             td= tour.difficulty[0].toUpperCase() + tour.difficulty.slice(1)
             td.d-flex.justify-content-around
-              a.btn.btn-info(href=`/manage-tours/${tour._id}`)
+              a.btn.btn-info(href=`/me/manage-tours/${tour._id}`)
                 span.fa-solid.fa-eye
               button.btn.btn-danger.text-white(id="btn-delete-tour" data-tourid=`${tour._id}`) 
                 span.fa-solid.fa-trash
