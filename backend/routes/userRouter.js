@@ -24,7 +24,11 @@ router.use(authController.restrictTo('admin'));
 router
   .route('/')
   .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .post(
+    userController.uploadUserImage,
+    userController.resizeUserImage,
+    userController.createUser
+  );
 
 router
   .route('/:userId')

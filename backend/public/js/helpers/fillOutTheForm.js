@@ -1,5 +1,5 @@
 const fillOutTheForm = (form, entity, ...fields) => {
-  const excludedFields = ['guides', 'photo'];
+  const excludedFields = ['guides', 'photo', 'imageCover'];
   fields.forEach((field) => {
     // Nêu input là kiểu select (như guides) thì bỏ qua
     if (!excludedFields.includes(field)) {
@@ -9,16 +9,29 @@ const fillOutTheForm = (form, entity, ...fields) => {
 
   // Nêu điền form tours thì có multiple select như guides
   if (entity === 'tours') {
+    const selectGuideOptions = document.getElementById('guides').options;
+
     const selectedGuides = [];
-    for (const option of document.querySelector('#guides').options) {
-      if (option.selected) selectedGuides.push(option.value);
+    for (const option of selectGuideOptions) {
+      if (option.selected) {
+        selectedGuides.push(option.value);
+      }
     }
-    form.append('guides', JSON.stringify(selectedGuides));
+
+    form.append('guides', selectedGuides);
+
+    const imageCover = document.getElementById('imageCover').files[0];
+    if (imageCover) {
+      form.append('imageCover', imageCover);
+    }
   }
 
-  // Nếu có upload file hình ảnh
-  if (fields.includes('photo') && document.querySelector('#photo').files[0]) {
-    form.append('photo', document.querySelector('#photo').files[0]);
+  if (entity === 'users') {
+    // Nếu có upload file hình ảnh
+    const photo = document.querySelector('#photo').files[0];
+    if (photo) {
+      form.append('photo', photo);
+    }
   }
 };
 

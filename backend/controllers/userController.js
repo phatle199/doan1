@@ -23,7 +23,7 @@ exports.uploadUserImage = upload.single('photo');
 exports.resizeUserImage = async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  req.file.filename = `user-${req.body.email}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
@@ -106,6 +106,10 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
+  if (req.file) {
+    req.body.photo = req.file.filename;
+  }
+
   const user = await User.create(req.body);
 
   res.status(201).json({
@@ -116,7 +120,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
-  console.log(req.body);
 
   if (req.body.password) {
     req.body.password = await bcrypt.hash(req.body.password, 12);

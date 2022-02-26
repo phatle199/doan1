@@ -1,25 +1,48 @@
 extends ../account
 
 block userview
-  form(class="my-5 ml-3" id="add-new-user-form")
-    h4(class="mb-3 text-center") ADD NEW USER
-    div(class="form-group")
+  form.my-5.ml-3#add-new-user-form
+    h4.mb-3.text-center ADD NEW USER
+
+    .form-group
       label(for="name") Name
-      input(type="text" class="form-control" id="name")
-    div(class="form-group")
+      input.form-control#name(type="text")
+      .invalid-feedback
+
+    .form-group
       label(for="email") Email Address
-      input(type="email" class="form-control" id="email")
-    div(class="form-group")
+      input.form-control#email(type="email")
+      .invalid-feedback
+
+    .form-group
       label(for="password") Password
-      input(type="password" class="form-control" id="password")
-    div(class="form-group")
+      input.form-control#password(type="password")
+      .invalid-feedback
+
+    .form-group
       label(for="passwordConfirm") Password Confirm
-      input(type="password" class="form-control" id="passwordConfirm")
-    div(class="form-group")
+      input.form-control#passwordConfirm(type="password")
+      .invalid-feedback
+
+    .form-group
       label(for="role") Role
-      select(class="form-control" id="role" name="role")
+      select.form-control#role(name="role")
+        option(value="") --Choose a role--
         option(value="admin") admin
         option(value="lead-guide") lead-guide
         option(value="guide") guide
-        option(value="user" selected) user
-    button(id="btn-addd-user" type="submit" class="btn btn-success") Add
+        option(value="user") user
+      .invalid-feedback
+    
+    // FILE UPLOAD INPUT
+    .m-auto.d-flex.justify-content-center.col-sm-6
+      img#preview.img-thumbnail.w-50.h-50(src=`/img/users/default.jpeg`)
+    label(for="photo") Photo
+    input#photo(type="file" name="photo" accept="image/*" style="visibility: hidden;position: absolute;")
+    .input-group.mb-3
+      input.form-control#file(type="text" disabled placeholder="Upload File")
+      .input-group-append
+        button.browse.btn.btn-dark(type="button") Browse...
+    #commonError.text-danger
+
+    button.btn.btn-success.btn-block(type="submit") Add

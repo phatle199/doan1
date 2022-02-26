@@ -1,4 +1,41 @@
-import errorMessageHandler from './errorMessageHandler';
+const errorMessageHandler = (error) => {
+  // xử lý lỗi validation
+  let errorsArray;
+  if (error.error.name === 'ValidationError') {
+    errorsArray = error.message
+      .slice(error.message.indexOf('failed: ') + 'failed: '.length)
+      .split(', ');
+    // ['description: Một tour phải có mô tả', 'summary: Một tour phải có tóm tắt']
+  }
+
+  if (error.error.code === 11000) {
+    const field = Object.keys(error.error.keyValue)[0];
+    const value = error.error.keyValue[Object.keys(error.error.keyValue)[0]];
+    errorsArray = [`${field}: ${value} has already used. Try another one.`];
+  }
+
+  if (error.status === 'fail') {
+    errorsArray = [`commonError: ${error.message}`];
+  }
+
+  const errorsObject = {};
+  errorsArray.forEach((errorMessage) => {
+    errorsObject[errorMessage.slice(0, errorMessage.indexOf(':'))] =
+      errorMessage.slice(errorMessage.indexOf(': ') + 2);
+  });
+
+  return errorsObject;
+};
+
+const addErrorMessage = (type, key, errorsObj) => {
+  const invalidInputElement = document.querySelector(`${type}#${key}`);
+
+  if (invalidInputElement) {
+    invalidInputElement.classList.add('is-invalid');
+    invalidInputElement.previousSibling.classList.add('text-danger');
+    invalidInputElement.nextSibling.innerText = errorsObj[key];
+  }
+};
 
 const catchAsync = (fn) => {
   return (...params) => {
@@ -6,6 +43,7 @@ const catchAsync = (fn) => {
       // Xóa các error message cũ
       const invalidInputs = document.querySelectorAll('.is-invalid');
       const invalidFeedbacks = document.querySelectorAll('.invalid-feedback');
+      const labelsTextDanger = document.querySelectorAll('.text-danger');
       const commonErrorElement = document.querySelector('#commonError');
 
       if (invalidInputs && invalidFeedbacks) {
@@ -15,37 +53,29 @@ const catchAsync = (fn) => {
         );
       }
 
+      if (labelsTextDanger) {
+        labelsTextDanger.forEach((labelElement) =>
+          labelElement.classList.remove('danger')
+        );
+      }
+
       if (commonErrorElement) {
         commonErrorElement.innerText = '';
       }
 
+      console.log(error);
+
       // Chuyển đổi error từ string sang object
       const errorsObj = errorMessageHandler(error.response.data);
 
+      // Hiển thị lỗi dưới mỗi input
       if (error.response.data.status === 'error') {
         Object.keys(errorsObj).forEach((key) => {
-          const invalidInputElement = document.querySelector(`input#${key}`);
-          const invalidTextareaElement = document.querySelector(
-            `textarea#${key}`
-          );
-          const invalidSelectElement = document.querySelector(`select#${key}`);
-
-          if (invalidInputElement) {
-            invalidInputElement.classList.add('is-invalid');
-            invalidInputElement.nextSibling.innerText = errorsObj[key];
-          }
-
-          if (invalidTextareaElement) {
-            invalidTextareaElement.classList.add('is-invalid');
-            invalidTextareaElement.nextSibling.innerText = errorsObj[key];
-          }
-
-          if (invalidSelectElement) {
-            console.log('a');
-            invalidSelectElement.classList.add('is-invalid');
-            invalidSelectElement.nextSibling.innerText = errorsObj[key];
-          }
+          addErrorMessage('input', key, errorsObj);
+          addErrorMessage('select', key, errorsObj);
+          addErrorMessage('textarea', key, errorsObj);
         });
+        // Hiển thị lỗi chung trên một hàng
       } else if (error.response.data.status === 'fail') {
         commonErrorElement.innerText = error.response.data.message;
       }

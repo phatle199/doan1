@@ -1,7 +1,38 @@
+const multer = require('multer');
+const sharp = require('sharp');
 const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/APIFeatures');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+
+// Configuring multer
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) return cb(null, true);
+  cb(new AppError('Not an image! Please upload an image.', 400), false);
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadTourImageCover = upload.single('imageCover');
+
+exports.resizeTourImageCover = async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = `tour-${req.body.name}-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.file.filename}`);
+
+  next();
+};
 
 exports.getAllTours = catchAsync(async (req, res, next) => {
   // Excute query
@@ -41,6 +72,13 @@ exports.getTour = catchAsync(async (req, res, next) => {
 });
 
 exports.createTour = catchAsync(async (req, res, next) => {
+  if (typeof req.body.guides === 'string') {
+    req.body.guides = req.body.guides.split(',');
+  }
+
+  if (req.file) {
+    req.body.imageCover = req.file.filename;
+  }
   const tour = await Tour.create(req.body);
 
   if (!tour) {
@@ -59,11 +97,13 @@ exports.createTour = catchAsync(async (req, res, next) => {
 exports.updateTour = catchAsync(async (req, res, next) => {
   const { tourId } = req.params;
 
-  // if (typeof req.body.guides === 'string') {
-  //   req.body.guides = req.body.guides.split(',');
-  // }
+  if (req.body.guides && typeof req.body.guides === 'string') {
+    req.body.guides = req.body.guides.split(',');
+  }
 
-  // console.log(req.body);
+  if (req.file) {
+    req.body.imageCover = req.file.filename;
+  }
 
   const tour = await Tour.findByIdAndUpdate(tourId, req.body, {
     new: true,

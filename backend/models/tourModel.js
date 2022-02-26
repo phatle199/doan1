@@ -3,22 +3,22 @@ const mongoose = require('mongoose');
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Tên tour là bắt buộc.'],
+    required: [true, 'A tour must have a name'],
     unique: true,
     trim: true,
     maxlength: 100,
   },
   duration: {
     type: Number,
-    required: [true, 'Số ngày là bắt buộc.'],
-    min: [1, 'Số ngày của một tour ít nhất phải là 1'],
+    required: [true, 'A tour must have a duration'],
+    min: [1, 'Duration must be greater than 0'],
   },
   difficulty: {
     type: String,
-    required: [true, 'Độ khó là bắt buộc.'],
+    required: [true, 'A tour must have a difficulty'],
     enum: {
       values: ['easy', 'medium', 'difficult'],
-      message: 'Độ khó phải là easy hoặc medium hoặc difficulty',
+      message: 'Difficulty must be easy or medium or hard',
     },
   },
   ratingsAverage: {
@@ -31,34 +31,38 @@ const tourSchema = new mongoose.Schema({
   },
   images: {
     type: [String],
-    required: [true, 'Một tour phải có ít nhất 3 ảnh để giới thiệu.'],
+    // validate: {
+    //   validator: (value) => Array.isArray(value) && value.length > 2,
+    //   message: 'A tour must have at least 3 images',
+    // },
   },
   imageCover: {
     type: String,
-    // required: [true, 'Một tour phải có một ảnh bìa.'],
+    // required: [true, 'A tour must have at least 1 image cover'],
   },
   maxGroupSize: {
     type: Number,
-    required: [true, 'Một tour phải có số lượng người tham gia tối đa'],
-    min: [1, 'Một nhóm phải có ít nhất một người tham gia'],
+    required: [true, 'A tour must have a max group size'],
+    min: [1, 'Max group size must be greater than 0'],
   },
   price: {
     type: Number,
-    required: [true, 'Một tour phải có giá'],
-    min: [1, 'Giá không thể âm'],
+    required: [true, 'A tour must have a price'],
+    min: [1, 'Price must be greater than 0'],
   },
   summary: {
     type: String,
-    required: [true, 'Một tour phải có tóm tắt'],
-    minlength: 10,
+    required: [true, 'A tour must have a summary'],
+    minlength: [20, 'Summary must have at least 20 characters'],
   },
   description: {
     type: String,
-    required: [true, 'Một tour phải có mô tả'],
+    required: [true, 'A tour must have a description'],
+    minlength: [30, 'Summary must have at least 30 characters'],
   },
   startDates: {
     type: [String],
-    required: [true, 'Một tour phải có các ngày bắt đầu'],
+    required: [true, 'A tour must have start dates'],
   },
   startLocation: {
     type: {
@@ -91,7 +95,10 @@ const tourSchema = new mongoose.Schema({
         ref: 'User',
       },
     ],
-    required: [true, 'A tour must have at least one guide'],
+    validate: {
+      validator: (value) => Array.isArray(value) && value.length > 0,
+      message: 'A tour must have at least 1 guide',
+    },
   },
   // reviews: {
 

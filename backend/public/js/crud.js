@@ -1,27 +1,13 @@
 import axios from 'axios';
 import catchAsync from './helpers/catchAsync';
 
-const transformInputData = (data) => {
-  const result = {};
-  for (const input of data.entries()) {
-    if (input[0] === 'guides') {
-      result[input[0]] = JSON.parse(input[1]);
-    } else {
-      result[input[0]] = input[1];
-    }
-  }
-  return result;
-};
-
 export const addOneDocument = catchAsync(async (data, entity) => {
-  const transformedInputData = transformInputData(data);
-
   const url = `http://127.0.0.1:5000/api/v1/${entity}`;
 
   const res = await axios({
     method: 'POST',
     url,
-    data: transformedInputData,
+    data,
   });
 
   if (res.data.status === 'success') {
@@ -30,26 +16,20 @@ export const addOneDocument = catchAsync(async (data, entity) => {
   }
 });
 
-export const updateOneDocument = async (data, id, entity) => {
-  try {
-    const transformedInputData = transformInputData(data);
+export const updateOneDocument = catchAsync(async (data, id, entity) => {
+  const url = `http://127.0.0.1:5000/api/v1/${entity}/${id}`;
 
-    const url = `http://127.0.0.1:5000/api/v1/${entity}/${id}`;
+  const res = await axios({
+    method: 'PATCH',
+    url,
+    data,
+  });
 
-    const res = await axios({
-      method: 'PATCH',
-      url,
-      data: entity === 'users' ? data : transformedInputData,
-    });
-
-    if (res.data.status === 'success') {
-      alert('Updated success!');
-      location.assign(`/manage-${entity}`);
-    }
-  } catch (error) {
-    alert(error.response.data.message);
+  if (res.data.status === 'success') {
+    alert('Updated success!');
+    location.assign(`/manage-${entity}`);
   }
-};
+});
 
 export const deleteOneDocument = async (id, entity) => {
   if (confirm('Are you sure you want to delete this document?')) {

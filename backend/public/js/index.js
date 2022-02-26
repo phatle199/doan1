@@ -15,6 +15,8 @@ const changeUserForm = document.querySelector('#change-user-form');
 const addNewUserForm = document.querySelector('#add-new-user-form');
 const deleteUserBtn = document.querySelectorAll('#btn-delete-user');
 
+const browseBtn = document.querySelector('.browse');
+
 // AUTH
 if (signupForm) {
   signupForm.addEventListener('submit', (e) => {
@@ -45,7 +47,7 @@ if (logoutBtn) {
 
 // MANAGE TOURS
 if (addNewTourForm) {
-  addNewTourForm.addEventListener('submit', async (e) => {
+  addNewTourForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = new FormData();
     fillOutTheForm(
@@ -58,15 +60,16 @@ if (addNewTourForm) {
       'maxGroupSize',
       'summary',
       'description',
-      'guides'
+      'guides',
+      'imageCover'
     );
 
-    await addOneDocument(form, 'tours');
+    addOneDocument(form, 'tours');
   });
 }
 
 if (changeTourForm) {
-  changeTourForm.addEventListener('submit', async (e) => {
+  changeTourForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = new FormData();
     fillOutTheForm(
@@ -82,11 +85,7 @@ if (changeTourForm) {
       'guides'
     );
 
-    await updateOneDocument(
-      form,
-      document.querySelector('#tour-id').value,
-      'tours'
-    );
+    updateOneDocument(form, document.querySelector('#tour-id').value, 'tours');
   });
 }
 
@@ -100,7 +99,7 @@ if (deleteTourBtn) {
 
 // MANAGE USERS
 if (addNewUserForm) {
-  addNewUserForm.addEventListener('submit', async (e) => {
+  addNewUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = new FormData();
     fillOutTheForm(
@@ -113,12 +112,12 @@ if (addNewUserForm) {
       'role'
     );
 
-    await addOneDocument(form, 'users');
+    addOneDocument(form, 'users');
   });
 }
 
 if (changeUserForm) {
-  changeUserForm.addEventListener('submit', async (e) => {
+  changeUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = new FormData();
     if (document.querySelector('#password').value !== '') {
@@ -135,15 +134,13 @@ if (changeUserForm) {
       fillOutTheForm(form, 'users', 'photo', 'name', 'email', 'role');
     }
 
-    await updateOneDocument(
-      form,
-      document.querySelector('#user-id').value,
-      'users'
-    );
+    updateOneDocument(form, document.querySelector('#user-id').value, 'users');
   });
+}
 
+if (browseBtn) {
   // Thêm tính năng hiển thị hình sau khi chọn file xong
-  document.querySelector('.browse').addEventListener('click', function () {
+  browseBtn.addEventListener('click', function () {
     const file = document
       .querySelector('.browse')
       .closest('.input-group').previousSibling;

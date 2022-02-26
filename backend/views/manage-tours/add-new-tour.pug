@@ -50,5 +50,16 @@ block userview
       select.form-control#guides(name="guides" multiple)
         each guide in guides
           option(value=`${guide._id}`)= guide.name
-      .invalid-feedback
+    
+    // FILE UPLOAD INPUT
+    .m-auto.d-flex.justify-content-center.col-sm-6
+      img#preview.img-thumbnail.w-50.h-50(src=`/img/tours/default.jpeg`)
+    label(for="imageCover") Image Cover
+    input#imageCover(type="file" name="imageCover" accept="image/*" style="visibility: hidden;position: absolute;")
+    .input-group.mb-3
+      input.form-control#file(type="text" disabled placeholder="Upload File")
+      .input-group-append
+        button.browse.btn.btn-dark(type="button") Browse...
+    #commonError.text-danger
+
     button.btn.btn-success(type="submit") Add

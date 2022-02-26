@@ -8760,7 +8760,7 @@ module.exports.default = axios;
 
 },{"./utils":"../../node_modules/axios/lib/utils.js","./helpers/bind":"../../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../../node_modules/axios/lib/cancel/isCancel.js","./env/data":"../../node_modules/axios/lib/env/data.js","./helpers/spread":"../../node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"../../node_modules/axios/lib/helpers/isAxiosError.js"}],"../../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../../node_modules/axios/lib/axios.js"}],"helpers/errorMessageHandler.js":[function(require,module,exports) {
+},{"./lib/axios":"../../node_modules/axios/lib/axios.js"}],"helpers/catchAsync.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8793,19 +8793,15 @@ var errorMessageHandler = function errorMessageHandler(error) {
   return errorsObject;
 };
 
-var _default = errorMessageHandler;
-exports.default = _default;
-},{}],"helpers/catchAsync.js":[function(require,module,exports) {
-"use strict";
+var addErrorMessage = function addErrorMessage(type, key, errorsObj) {
+  var invalidInputElement = document.querySelector("".concat(type, "#").concat(key));
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _errorMessageHandler = _interopRequireDefault(require("./errorMessageHandler"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  if (invalidInputElement) {
+    invalidInputElement.classList.add('is-invalid');
+    invalidInputElement.previousSibling.classList.add('text-danger');
+    invalidInputElement.nextSibling.innerText = errorsObj[key];
+  }
+};
 
 var catchAsync = function catchAsync(fn) {
   return function () {
@@ -8813,6 +8809,7 @@ var catchAsync = function catchAsync(fn) {
       // Xóa các error message cũ
       var invalidInputs = document.querySelectorAll('.is-invalid');
       var invalidFeedbacks = document.querySelectorAll('.invalid-feedback');
+      var labelsTextDanger = document.querySelectorAll('.text-danger');
       var commonErrorElement = document.querySelector('#commonError');
 
       if (invalidInputs && invalidFeedbacks) {
@@ -8824,35 +8821,26 @@ var catchAsync = function catchAsync(fn) {
         });
       }
 
+      if (labelsTextDanger) {
+        labelsTextDanger.forEach(function (labelElement) {
+          return labelElement.classList.remove('danger');
+        });
+      }
+
       if (commonErrorElement) {
         commonErrorElement.innerText = '';
-      } // Chuyển đổi error từ string sang object
+      }
 
+      console.log(error); // Chuyển đổi error từ string sang object
 
-      var errorsObj = (0, _errorMessageHandler.default)(error.response.data);
+      var errorsObj = errorMessageHandler(error.response.data); // Hiển thị lỗi dưới mỗi input
 
       if (error.response.data.status === 'error') {
         Object.keys(errorsObj).forEach(function (key) {
-          var invalidInputElement = document.querySelector("input#".concat(key));
-          var invalidTextareaElement = document.querySelector("textarea#".concat(key));
-          var invalidSelectElement = document.querySelector("select#".concat(key));
-
-          if (invalidInputElement) {
-            invalidInputElement.classList.add('is-invalid');
-            invalidInputElement.nextSibling.innerText = errorsObj[key];
-          }
-
-          if (invalidTextareaElement) {
-            invalidTextareaElement.classList.add('is-invalid');
-            invalidTextareaElement.nextSibling.innerText = errorsObj[key];
-          }
-
-          if (invalidSelectElement) {
-            console.log('a');
-            invalidSelectElement.classList.add('is-invalid');
-            invalidSelectElement.nextSibling.innerText = errorsObj[key];
-          }
-        });
+          addErrorMessage('input', key, errorsObj);
+          addErrorMessage('select', key, errorsObj);
+          addErrorMessage('textarea', key, errorsObj);
+        }); // Hiển thị lỗi chung trên một hàng
       } else if (error.response.data.status === 'fail') {
         commonErrorElement.innerText = error.response.data.message;
       }
@@ -8862,7 +8850,7 @@ var catchAsync = function catchAsync(fn) {
 
 var _default = catchAsync;
 exports.default = _default;
-},{"./errorMessageHandler":"helpers/errorMessageHandler.js"}],"auth.js":[function(require,module,exports) {
+},{}],"auth.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9019,54 +9007,22 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-var transformInputData = function transformInputData(data) {
-  var result = {};
-
-  var _iterator = _createForOfIteratorHelper(data.entries()),
-      _step;
-
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var input = _step.value;
-
-      if (input[0] === 'guides') {
-        result[input[0]] = JSON.parse(input[1]);
-      } else {
-        result[input[0]] = input[1];
-      }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-
-  return result;
-};
-
 var addOneDocument = (0, _catchAsync.default)( /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data, entity) {
-    var transformedInputData, url, res;
+    var url, res;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            transformedInputData = transformInputData(data);
             url = "http://127.0.0.1:5000/api/v1/".concat(entity);
-            _context.next = 4;
+            _context.next = 3;
             return (0, _axios.default)({
               method: 'POST',
               url: url,
-              data: transformedInputData
+              data: data
             });
 
-          case 4:
+          case 3:
             res = _context.sent;
 
             if (res.data.status === 'success') {
@@ -9074,7 +9030,7 @@ var addOneDocument = (0, _catchAsync.default)( /*#__PURE__*/function () {
               location.assign("/manage-".concat(entity));
             }
 
-          case 6:
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -9087,25 +9043,22 @@ var addOneDocument = (0, _catchAsync.default)( /*#__PURE__*/function () {
   };
 }());
 exports.addOneDocument = addOneDocument;
-
-var updateOneDocument = /*#__PURE__*/function () {
+var updateOneDocument = (0, _catchAsync.default)( /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data, id, entity) {
-    var transformedInputData, url, res;
+    var url, res;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            transformedInputData = transformInputData(data);
             url = "http://127.0.0.1:5000/api/v1/".concat(entity, "/").concat(id);
-            _context2.next = 5;
+            _context2.next = 3;
             return (0, _axios.default)({
               method: 'PATCH',
               url: url,
-              data: entity === 'users' ? data : transformedInputData
+              data: data
             });
 
-          case 5:
+          case 3:
             res = _context2.sent;
 
             if (res.data.status === 'success') {
@@ -9113,27 +9066,18 @@ var updateOneDocument = /*#__PURE__*/function () {
               location.assign("/manage-".concat(entity));
             }
 
-            _context2.next = 12;
-            break;
-
-          case 9:
-            _context2.prev = 9;
-            _context2.t0 = _context2["catch"](0);
-            alert(_context2.t0.response.data.message);
-
-          case 12:
+          case 5:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 9]]);
+    }, _callee2);
   }));
 
-  return function updateOneDocument(_x3, _x4, _x5) {
+  return function (_x3, _x4, _x5) {
     return _ref2.apply(this, arguments);
   };
-}();
-
+}());
 exports.updateOneDocument = updateOneDocument;
 
 var deleteOneDocument = /*#__PURE__*/function () {
@@ -9201,7 +9145,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var fillOutTheForm = function fillOutTheForm(form, entity) {
-  var excludedFields = ['guides', 'photo'];
+  var excludedFields = ['guides', 'photo', 'imageCover'];
 
   for (var _len = arguments.length, fields = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     fields[_key - 2] = arguments[_key];
@@ -9215,15 +9159,19 @@ var fillOutTheForm = function fillOutTheForm(form, entity) {
   }); // Nêu điền form tours thì có multiple select như guides
 
   if (entity === 'tours') {
+    var selectGuideOptions = document.getElementById('guides').options;
     var selectedGuides = [];
 
-    var _iterator = _createForOfIteratorHelper(document.querySelector('#guides').options),
+    var _iterator = _createForOfIteratorHelper(selectGuideOptions),
         _step;
 
     try {
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var option = _step.value;
-        if (option.selected) selectedGuides.push(option.value);
+
+        if (option.selected) {
+          selectedGuides.push(option.value);
+        }
       }
     } catch (err) {
       _iterator.e(err);
@@ -9231,12 +9179,21 @@ var fillOutTheForm = function fillOutTheForm(form, entity) {
       _iterator.f();
     }
 
-    form.append('guides', JSON.stringify(selectedGuides));
-  } // Nếu có upload file hình ảnh
+    form.append('guides', selectedGuides);
+    var imageCover = document.getElementById('imageCover').files[0];
 
+    if (imageCover) {
+      form.append('imageCover', imageCover);
+    }
+  }
 
-  if (fields.includes('photo') && document.querySelector('#photo').files[0]) {
-    form.append('photo', document.querySelector('#photo').files[0]);
+  if (entity === 'users') {
+    // Nếu có upload file hình ảnh
+    var photo = document.querySelector('#photo').files[0];
+
+    if (photo) {
+      form.append('photo', photo);
+    }
   }
 };
 
@@ -9529,7 +9486,8 @@ var addNewTourForm = document.querySelector('#add-new-tour-form');
 var deleteTourBtn = document.querySelectorAll('#btn-delete-tour');
 var changeUserForm = document.querySelector('#change-user-form');
 var addNewUserForm = document.querySelector('#add-new-user-form');
-var deleteUserBtn = document.querySelectorAll('#btn-delete-user'); // AUTH
+var deleteUserBtn = document.querySelectorAll('#btn-delete-user');
+var browseBtn = document.querySelector('.browse'); // AUTH
 
 if (signupForm) {
   signupForm.addEventListener('submit', function (e) {
@@ -9560,82 +9518,44 @@ if (logoutBtn) {
 
 
 if (addNewTourForm) {
-  addNewTourForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var form;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              e.preventDefault();
-              form = new FormData();
-              (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides');
-              _context.next = 5;
-              return (0, _crud.addOneDocument)(form, 'tours');
-
-            case 5:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }));
-
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }());
+  addNewTourForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = new FormData();
+    (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides', 'imageCover');
+    (0, _crud.addOneDocument)(form, 'tours');
+  });
 }
 
 if (changeTourForm) {
-  changeTourForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-      var form;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              e.preventDefault();
-              form = new FormData();
-              (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides');
-              _context2.next = 5;
-              return (0, _crud.updateOneDocument)(form, document.querySelector('#tour-id').value, 'tours');
-
-            case 5:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
-
-    return function (_x2) {
-      return _ref2.apply(this, arguments);
-    };
-  }());
+  changeTourForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = new FormData();
+    (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides');
+    (0, _crud.updateOneDocument)(form, document.querySelector('#tour-id').value, 'tours');
+  });
 }
 
 if (deleteTourBtn) {
   deleteTourBtn.forEach(function (btn) {
     btn.addEventListener('click', /*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context.prev = _context.next) {
               case 0:
-                _context3.next = 2;
+                _context.next = 2;
                 return (0, _crud.deleteOneDocument)(btn.dataset.tourid, 'tours');
 
               case 2:
               case "end":
-                return _context3.stop();
+                return _context.stop();
             }
           }
-        }, _callee3);
+        }, _callee);
       }));
 
-      return function (_x3) {
-        return _ref3.apply(this, arguments);
+      return function (_x) {
+        return _ref.apply(this, arguments);
       };
     }());
   });
@@ -9643,67 +9563,32 @@ if (deleteTourBtn) {
 
 
 if (addNewUserForm) {
-  addNewUserForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(e) {
-      var form;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              e.preventDefault();
-              form = new FormData();
-              (0, _fillOutTheForm.default)(form, 'users', 'name', 'email', 'password', 'passwordConfirm', 'role');
-              _context4.next = 5;
-              return (0, _crud.addOneDocument)(form, 'users');
-
-            case 5:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4);
-    }));
-
-    return function (_x4) {
-      return _ref4.apply(this, arguments);
-    };
-  }());
+  addNewUserForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = new FormData();
+    (0, _fillOutTheForm.default)(form, 'users', 'name', 'email', 'password', 'passwordConfirm', 'role');
+    (0, _crud.addOneDocument)(form, 'users');
+  });
 }
 
 if (changeUserForm) {
-  changeUserForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
-      var form;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              e.preventDefault();
-              form = new FormData();
+  changeUserForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = new FormData();
 
-              if (document.querySelector('#password').value !== '') {
-                (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'password', 'role');
-              } else {
-                (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'role');
-              }
+    if (document.querySelector('#password').value !== '') {
+      (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'password', 'role');
+    } else {
+      (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'role');
+    }
 
-              _context5.next = 5;
-              return (0, _crud.updateOneDocument)(form, document.querySelector('#user-id').value, 'users');
+    (0, _crud.updateOneDocument)(form, document.querySelector('#user-id').value, 'users');
+  });
+}
 
-            case 5:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }));
-
-    return function (_x5) {
-      return _ref5.apply(this, arguments);
-    };
-  }()); // Thêm tính năng hiển thị hình sau khi chọn file xong
-
-  document.querySelector('.browse').addEventListener('click', function () {
+if (browseBtn) {
+  // Thêm tính năng hiển thị hình sau khi chọn file xong
+  browseBtn.addEventListener('click', function () {
     var file = document.querySelector('.browse').closest('.input-group').previousSibling;
     file.click();
   });
@@ -9725,24 +9610,24 @@ if (changeUserForm) {
 if (deleteUserBtn) {
   deleteUserBtn.forEach(function (btn) {
     btn.addEventListener('click', /*#__PURE__*/function () {
-      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context6.next = 2;
+                _context2.next = 2;
                 return (0, _crud.deleteOneDocument)(btn.dataset.userid, 'users');
 
               case 2:
               case "end":
-                return _context6.stop();
+                return _context2.stop();
             }
           }
-        }, _callee6);
+        }, _callee2);
       }));
 
-      return function (_x6) {
-        return _ref6.apply(this, arguments);
+      return function (_x2) {
+        return _ref2.apply(this, arguments);
       };
     }());
   });

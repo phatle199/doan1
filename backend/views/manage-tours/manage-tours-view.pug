@@ -1,10 +1,11 @@
 extends ../account
 
 block userview
-  p(class="text-center display-4") LIST OF TOURS
+  p.text-center.display-4 LIST OF TOURS
 
-  table(class="table table-hover")
-      thead(class="thead-dark")
+  a.btn.btn-primary.mb-3(href="/manage-tours/add") Add new tour
+  table.table.table-hover
+      thead.thead-dark
         th #
         th Name
         th Duration
@@ -21,7 +22,8 @@ block userview
             td= tour.duration
             td= tour.price
             td= tour.difficulty[0].toUpperCase() + tour.difficulty.slice(1)
-            td(class="d-flex justify-content-around")
-              a(href=`/manage-tours/${tour._id}` class="btn btn-info") Details
-              button(id="btn-delete-tour" class="btn btn-danger text-white" data-tourid=`${tour._id}`) Delete
-  a(class="btn btn-link btn-primary float-right" href="/manage-tours/add") Add New Tour
+            td.d-flex.justify-content-around
+              a.btn.btn-info(href=`/manage-tours/${tour._id}`)
+                span.fa-solid.fa-eye
+              button.btn.btn-danger.text-white(id="btn-delete-tour" data-tourid=`${tour._id}`) 
+                span.fa-solid.fa-trash

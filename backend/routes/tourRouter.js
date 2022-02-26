@@ -7,12 +7,20 @@ const router = express.Router();
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.createTour);
+  .post(
+    tourController.uploadTourImageCover,
+    tourController.resizeTourImageCover,
+    tourController.createTour
+  );
 
 router
   .route('/:tourId')
   .get(tourController.getTour)
-  .patch(tourController.updateTour)
+  .patch(
+    tourController.uploadTourImageCover,
+    tourController.resizeTourImageCover,
+    tourController.updateTour
+  )
   .delete(tourController.deleteTour);
 
 module.exports = router;
