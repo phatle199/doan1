@@ -3,56 +3,61 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please tell us your name'],
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide your email'],
-    unique: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide your password'],
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please confirm your password'],
-    validate: {
-      validator: function (val) {
-        return this.password === val;
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please tell us your name'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Please provide your email'],
+      unique: true,
+      validate: [validator.isEmail, 'Please provide a valid email'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Please provide your password'],
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, 'Please confirm your password'],
+      validate: {
+        validator: function (val) {
+          return this.password === val;
+        },
+        message: 'Passwords are not the same',
       },
-      message: 'Passwords are not the same',
+    },
+    photo: {
+      type: String,
+      default: 'default.jpeg',
+    },
+    role: {
+      type: String,
+      enum: {
+        values: ['user', 'guide', 'lead-guide', 'admin'],
+        message: 'Role must be user or guide or lead-guide or admin',
+      },
+      default: 'user',
+    },
+    passwordChangedAt: Date,
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordTokenExpiresIn: {
+      type: Date,
     },
   },
-  photo: {
-    type: String,
-    default: 'default.jpeg',
-  },
-  role: {
-    type: String,
-    enum: {
-      values: ['user', 'guide', 'lead-guide', 'admin'],
-      message: 'Role must be user or guide or lead-guide or admin',
-    },
-    default: 'user',
-  },
-  passwordChangedAt: Date,
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  resetPasswordToken: {
-    type: String,
-  },
-  resetPasswordTokenExpiresIn: {
-    type: Date,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre('save', async function (next) {
   // Chỉ mã hóa mật khẩu khi cột password được thêm hoặc được thay đổi

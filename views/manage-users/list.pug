@@ -1,0 +1,106 @@
+extends ../account
+
+mixin details(field, content)
+  .row
+    .col-4
+      h6= field
+    .col-7
+      p= content
+  
+mixin pageItem(pageNumber)
+  - const isActive = currentPage === pageNumber
+  li(class=`page-item ${isActive ? 'active' : ''}`)
+    a.page-link.page-number(href=`/me/manage-users?page=${pageNumber}`)= pageNumber
+
+block userview
+  - currentPage = currentPage < 1 ? 1 : currentPage
+  p.text-center.display-4 LIST OF USERS
+
+  a.btn.btn-primary.mb-3(href="/me/manage-users/add") Add New User
+  table.table.table-hover
+      thead.thead-dark
+        th #
+        th Name
+        th Email Address
+        th Role
+        th Active
+        th
+      tbody
+        - let i = (currentPage - 1) * 5;
+        each user in users
+          - i++;
+          tr
+            td= i
+            td= user.name
+            td= user.email
+            td= user.role
+            td= `${user.active ? 'yes' : 'no'}`
+            td.d-flex.justify-content-around
+              button.btn.btn-dark.text-white(id="btn-show-detail" data-toggle='modal' data-target=`#user-detail-${user._id}` data-tourid=`${user._id}`) 
+                span.fa-solid.fa-eye
+              a.btn.btn-info(href=`/me/manage-users/${user._id}`)
+                span.fa-solid.fa-square-pen
+              a.btn.btn-danger.text-white#btn-delete-user(data-userid=`${user._id}`)
+                span.fa-solid.fa-trash
+
+  // PAGINATION
+  nav(aria-label="Page navigation example")
+    ul.pagination.justify-content-center
+
+      li.page-item#previous
+        a.page-link(href="#" aria-label="Previous")
+          span(aria-hidden="true") &laquo;
+          span.sr-only Previous
+
+      - let pageNumber = currentPage
+      - const left = currentPage > 0 && currentPage < pageSize - 1
+      - const overPageNumber = currentPage > pageSize || currentPage < 1
+      
+      if overPageNumber
+        +pageItem(1)
+        +pageItem(2)
+        +pageItem(3)
+      else
+        if left
+          +pageItem(pageNumber)
+          +pageItem(pageNumber + 1)
+          +pageItem(pageNumber + 2)
+        else
+          +pageItem(pageNumber - 2)
+          +pageItem(pageNumber - 1)
+          +pageItem(pageNumber)      
+
+      li.page-item#next(data-page-size=`${pageSize}`)
+        a.page-link(href="#" aria-label="Next")
+          span(aria-hidden="true") &raquo;
+          span.sr-only Next
+
+  // MODAL
+  each user in users
+    .modal.fade(id=`user-detail-${user._id}` tabindex="-1" role="dialog" aria-labelledby=`modal-label-${user._id}`)
+      .modal-dialog.modal-lg
+        .modal-content
+
+          //- Modal Header
+          .modal-header
+            h4.modal-title= user.name
+            button.close(type="button" data-dismiss=`user-detail-${user._id}`) &times;
+
+          //- Modal body
+          .modal-body 
+            .row 
+              .col-5
+                img.w-75.h-100.rounded-circle(src=`/img/users/${user.photo}`)
+              .col-6
+                +details('Name', user.name)
+                +details('Email', user.email)
+                - const passwordChangedAt = user.passwordChangedAt ? new Date(user.passwordChangedAt).toLocaleString("vi") : 'Not changed yet';
+                +details('Password Changed At', passwordChangedAt)
+                +details('Role', user.role)
+                - const createdAt = new Date(user.createdAt).toLocaleString("vi");
+                +details('Created At', createdAt)
+
+          //- Modal footer
+          .modal-footer
+            button.btn.btn-danger(type="button" data-dismiss=`user-detail-${user._id}`) Close
+  

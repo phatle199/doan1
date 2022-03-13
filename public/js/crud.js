@@ -12,7 +12,7 @@ export const addOneDocument = catchAsync(async (data, entity) => {
 
   if (res.data.status === 'success') {
     alert(`Added success!`);
-    location.assign(`/manage-${entity}`);
+    location.reload();
   }
 });
 
@@ -27,7 +27,7 @@ export const updateOneDocument = catchAsync(async (data, id, entity) => {
 
   if (res.data.status === 'success') {
     alert('Updated success!');
-    location.assign(`/manage-${entity}`);
+    location.reload();
   }
 });
 
@@ -42,7 +42,7 @@ export const deleteOneDocument = async (id, entity) => {
 
       if (res.data.status === 'success') {
         alert('Deleted success!');
-        location.assign(`/manage-${entity}`);
+        location.reload();
       }
     } catch (error) {
       alert(error.response.data.message);

@@ -1,0 +1,104 @@
+extends ../account
+
+mixin details(field, content, isImage)
+  if isImage
+    .row
+      .col-4.text-right
+        h6= field
+      .col-7
+        img.w-100.h-100(src=`/img/tours/${content}`)
+  else
+    .row
+      .col-4.text-right
+        h6= field
+      .col-7
+        p= content
+
+mixin pageItem(pageNumber)
+  - const isActive = currentPage === pageNumber
+  li(class=`page-item ${isActive ? 'active' : ''}`)
+    a.page-link.page-number(href=`/me/manage-tours?page=${pageNumber}`)= pageNumber
+
+block userview
+  p.text-center.display-4 LIST OF TOURS
+
+  a.btn.btn-primary.mb-3(href="/me/manage-tours/add") Add new tour
+  table.table.table-hover
+    thead.thead-dark
+      th #
+      th Name
+      th Duration
+      th Price
+      th Difficulty
+      th
+    tbody
+      - let i = (currentPage - 1) * 5;
+      each tour in tours
+        - i++;
+        tr
+          td= i
+          td= tour.name
+          td= tour.duration
+          td= tour.price
+          td= tour.difficulty[0].toUpperCase() + tour.difficulty.slice(1)
+          td.d-flex.justify-content-around
+            button.btn.btn-dark.text-white(id="btn-show-detail" data-toggle='modal' data-target=`#tour-detail-${tour._id}` data-tourid=`${tour._id}`) 
+              span.fa-solid.fa-eye
+            a.btn.btn-info(href=`/me/manage-tours/${tour._id}`)
+              span.fa-solid.fa-square-pen
+            button.btn.btn-danger.text-white(id="btn-delete-tour" data-tourid=`${tour._id}`) 
+              span.fa-solid.fa-trash
+
+  // PAGINATION
+  nav(aria-label="Page navigation example")
+    ul.pagination.justify-content-center
+
+      li.page-item#previous
+        a.page-link(href="#" aria-label="Previous")
+          span(aria-hidden="true") &laquo;
+          span.sr-only Previous
+
+      - let pageNumber = 1
+      while pageNumber < pageSize + 1
+        - const pageItemIsFulled = pageNumber === 4
+        if pageItemIsFulled
+          - break
+        else
+          +pageItem(pageNumber)
+          - pageNumber = pageNumber + 1
+
+      li.page-item#next
+        a.page-link(href="#" aria-label="Next")
+          span(aria-hidden="true") &raquo;
+          span.sr-only Next
+
+  // MODAL
+  each tour in tours
+    .modal.fade(id=`tour-detail-${tour._id}` tabindex="-1" role="dialog" aria-labelledby=`modal-label-${tour._id}`)
+      .modal-dialog.modal-lg
+        .modal-content
+
+          //- Modal Header
+          .modal-header
+            h4.modal-title= tour.name
+            button.close(type="button" data-dismiss=`tour-detail-${tour._id}`) &times;
+
+          //- Modal body
+          .modal-body 
+            +details('Name', tour.name)
+            +details('Price', tour.price)
+            +details('Duration', tour.duration)
+            +details('Difficulty', tour.difficulty)
+            +details('Max Group Size', tour.maxGroupSize)
+            +details('Ratings Average', tour.ratingsAverage)
+            +details('Ratings Quantity', tour.ratingsQuantity)
+            +details('Summary', tour.summary)
+            - const tourGuideNames = tour.guides.map(guide => guide.name).join(', ')
+            +details('Guides', tourGuideNames)
+            +details('Description', tour.description)
+            +details('Image Cover', tour.imageCover, true)
+
+          //- Modal footer
+          .modal-footer
+            button.btn.btn-danger(type="button" data-dismiss=`tour-detail-${tour._id}`) Close
+              

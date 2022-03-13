@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
+const APIFeatures = require('../utils/APIFeatures');
 
 exports.getOverview = async (req, res, next) => {
   const tours = await Tour.find();
@@ -41,17 +42,26 @@ exports.getMe = (req, res, next) => {
   });
 };
 
-exports.getManageToursView = async (req, res, next) => {
-  const tours = await Tour.find({});
-  res.status(200).render('manage-tours/manage-tours-view', {
+// TOUR
+exports.getToursList = async (req, res, next) => {
+  if (!req.query.page) req.query.page = 1;
+  const numberOfTours = await Tour.count();
+
+  const features = new APIFeatures(Tour.find({}), req.query).paginate();
+
+  const tours = await features.query;
+
+  res.status(200).render('manage-tours/list', {
     title: 'Manage Tours',
     user: req.user,
     tours,
     pathname: req.path,
+    pageSize: Math.ceil(numberOfTours / 5),
+    currentPage: Number(req.query.page),
   });
 };
 
-exports.getTourForm = async (req, res, next) => {
+exports.getUpdateTourForm = async (req, res, next) => {
   const tour = await Tour.findById(req.params.tourId).populate('guides');
   const guides = await User.find({
     $or: [{ role: 'guide' }, { role: 'lead-guide' }],
@@ -70,7 +80,7 @@ exports.getTourForm = async (req, res, next) => {
     if (!selectedGuideNames.includes(guide.name)) restOfTourGuides.push(guide);
   });
 
-  res.status(200).render('manage-tours/tour-detail-form', {
+  res.status(200).render('manage-tours/update', {
     title: tour.name,
     tour,
     selectedGuides,
@@ -79,32 +89,40 @@ exports.getTourForm = async (req, res, next) => {
   });
 };
 
-exports.getAddNewTourForm = async (req, res, next) => {
+exports.getCreateTourForm = async (req, res, next) => {
   const guides = await User.find({
     $or: [{ role: 'guide' }, { role: 'lead-guide' }],
   });
 
-  res.status(200).render('manage-tours/add-new-tour', {
+  res.status(200).render('manage-tours/create', {
     title: 'Add New Tour',
     guides,
     pathname: req.path,
   });
 };
 
-exports.getManageUsersView = async (req, res, next) => {
-  const users = await User.find({});
-  res.status(200).render('manage-users/manage-users-view', {
+// USERS
+exports.getUsersList = async (req, res, next) => {
+  if (!req.query.page) req.query.page = 1;
+  const numberOfTours = await User.count();
+  const features = new APIFeatures(User.find({}), req.query).paginate();
+
+  const users = await features.query;
+
+  res.status(200).render('manage-users/list', {
     title: 'Manage Users',
     user: req.user,
     users,
     pathname: req.path,
+    pageSize: Math.ceil(numberOfTours / 5),
+    currentPage: Number(req.query.page),
   });
 };
 
-exports.getUserForm = async (req, res, next) => {
+exports.getUpdateUserForm = async (req, res, next) => {
   const selectedUser = await User.findById(req.params.userId);
 
-  res.status(200).render('manage-users/user-detail-form', {
+  res.status(200).render('manage-users/update', {
     title: selectedUser.name,
     user: req.user,
     selectedUser,
@@ -112,8 +130,8 @@ exports.getUserForm = async (req, res, next) => {
   });
 };
 
-exports.getAddNewUserForm = (req, res) => {
-  res.status(200).render('manage-users/add-new-user', {
+exports.getCreateUserForm = (req, res) => {
+  res.status(200).render('manage-users/add', {
     title: 'Add New User',
     pathname: req.path,
   });

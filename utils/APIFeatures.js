@@ -45,7 +45,8 @@ class APIFeatures {
   paginate() {
     if (this.reqQuery.page) {
       let { page, size } = this.reqQuery;
-      if (!size) size = 3;
+      if (page < 1) page = 1;
+      if (!size) size = 5;
       const skipValue = (page - 1) * size;
       this.query = this.query.skip(skipValue).limit(size);
     }
