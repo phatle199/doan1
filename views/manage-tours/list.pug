@@ -67,7 +67,7 @@ block userview
           +pageItem(pageNumber)
           - pageNumber = pageNumber + 1
 
-      li.page-item#next
+      li.page-item#next(data-page-size=`${pageSize}`)
         a.page-link(href="#" aria-label="Next")
           span(aria-hidden="true") &raquo;
           span.sr-only Next
