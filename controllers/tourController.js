@@ -74,11 +74,28 @@ exports.getTour = catchAsync(async (req, res, next) => {
 exports.createTour = catchAsync(async (req, res, next) => {
   if (typeof req.body.guides === 'string') {
     req.body.guides = req.body.guides.split(',');
+  } else if (!req.body.guides) {
+    req.body.guides = [];
   }
 
   if (req.file) {
     req.body.imageCover = req.file.filename;
   }
+
+  if (req.body.locations) {
+    const locations = JSON.parse(req.body.locations);
+
+    formatedLocations = locations.map((item) => {
+      return {
+        coordinates: [Number(item.longtitude), Number(item.latitude)],
+        description: item.description,
+        day: Number(item.day),
+      };
+    });
+
+    req.body.locations = formatedLocations;
+  }
+
   const tour = await Tour.create(req.body);
 
   if (!tour) {
@@ -99,10 +116,26 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 
   if (req.body.guides && typeof req.body.guides === 'string') {
     req.body.guides = req.body.guides.split(',');
+  } else if (!req.body.guides) {
+    req.body.guides = [];
   }
 
   if (req.file) {
     req.body.imageCover = req.file.filename;
+  }
+
+  if (req.body.locations) {
+    const locations = JSON.parse(req.body.locations);
+
+    formatedLocations = locations.map((item) => {
+      return {
+        coordinates: [Number(item.longtitude), Number(item.latitude)],
+        description: item.description,
+        day: Number(item.day),
+      };
+    });
+
+    req.body.locations = formatedLocations;
   }
 
   const tour = await Tour.findByIdAndUpdate(tourId, req.body, {

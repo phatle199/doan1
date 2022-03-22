@@ -7,8 +7,9 @@ const fillOutTheForm = (form, entity, ...fields) => {
     }
   });
 
-  // Nêu điền form tours thì có multiple select như guides
+  // Nêu điền form tours
   if (entity === 'tours') {
+    // Xử lý multiple select
     const selectGuideOptions = document.getElementById('guides').options;
 
     const selectedGuides = [];
@@ -18,11 +19,33 @@ const fillOutTheForm = (form, entity, ...fields) => {
       }
     }
 
-    form.append('guides', selectedGuides);
+    if (!(selectedGuides.length === 0)) {
+      form.append('guides', selectedGuides);
+    }
 
+    // Xử lý file upload
     const imageCover = document.getElementById('imageCover').files[0];
     if (imageCover) {
       form.append('imageCover', imageCover);
+    }
+
+    // Xử lý nhập locations
+    const locations = [];
+    const totalNumberOfLocations = document.querySelectorAll(
+      'div.row#locations-container>div.col-6'
+    ).length;
+
+    if (totalNumberOfLocations) {
+      for (let i = 0; i < totalNumberOfLocations; i++) {
+        const longtitude = document.getElementById(`longtitude${i + 1}`).value;
+        const latitude = document.getElementById(`latitude${i + 1}`).value;
+        const description = document.getElementById(
+          `description${i + 1}`
+        ).value;
+        const day = document.getElementById(`day${i + 1}`).value;
+        locations.push({ longtitude, latitude, description, day });
+      }
+      form.append('locations', JSON.stringify(locations));
     }
   }
 

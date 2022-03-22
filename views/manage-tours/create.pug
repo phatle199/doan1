@@ -50,6 +50,7 @@ block userview
       select.form-control#guides(name="guides" multiple)
         each guide in guides
           option(value=`${guide._id}`)= guide.name
+      .invalid-feedback
     
     // FILE UPLOAD INPUT
     .m-auto.d-flex.justify-content-center.col-sm-6
@@ -62,4 +63,18 @@ block userview
         button.browse.btn.btn-dark(type="button") Browse...
     #commonError.text-danger
 
-    button.btn.btn-success(type="submit") Add
+    // UPLOAD MULTIPLE IMAGES
+    
+
+    // UPLOAD LOCATIONS
+    .form-group
+      label(for="totalNumberOfLocations") Total number of locations
+      .input-group
+        input.form-control(type="number" min="1")#totalNumberOfLocations
+        span.input-group-btn
+          button.btn.btn-dark#totalNumberOfLocations(type="button") OK
+
+    .row#locations-container
+      //- locations form...
+
+    button.btn.btn-success.btn-block(type="submit") Add
