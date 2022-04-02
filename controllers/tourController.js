@@ -116,7 +116,7 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 
   if (req.body.guides && typeof req.body.guides === 'string') {
     req.body.guides = req.body.guides.split(',');
-  } else if (!req.body.guides) {
+  } else if (req.body.guides === '') {
     req.body.guides = [];
   }
 

@@ -41,8 +41,8 @@ const addErrorMessage = (type, key, errorsObj) => {
 };
 
 const catchAsync = (fn) => {
-  return (...params) => {
-    fn(...params).catch((error) => {
+  return async (...params) => {
+    await fn(...params).catch((error) => {
       // Xóa các error message cũ
       const invalidInputs = document.querySelectorAll('.is-invalid');
       const invalidFeedbacks = document.querySelectorAll('.invalid-feedback');

@@ -4,7 +4,9 @@ import { addOneDocument, updateOneDocument, deleteOneDocument } from './crud';
 import fillOutTheForm from './helpers/fillOutTheForm';
 import { previousButtonHandler, nextButtonHandler } from './pagination';
 import showLocationsFormButtonHandler from './insertLocationsForm';
+import updateSettings from './updateSettings';
 
+// DOM
 const signupForm = document.querySelector('#signup-form');
 const loginForm = document.querySelector('#login-form');
 const logoutBtn = document.querySelector('#log-out-btn');
@@ -27,6 +29,10 @@ const showLocationsFormButton = document.querySelector(
   'button#totalNumberOfLocations'
 );
 
+const accountSettingsForm = document.querySelector('#account-settings-form');
+const passwordChangeForm = document.querySelector('#password-change-form');
+
+// ACTIONS
 if (showLocationsFormButton) {
   showLocationsFormButtonHandler(showLocationsFormButton);
 }
@@ -191,5 +197,41 @@ if (deleteUserBtn) {
     btn.addEventListener('click', async (e) => {
       await deleteOneDocument(btn.dataset.userid, 'users');
     });
+  });
+}
+
+if (accountSettingsForm) {
+  accountSettingsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    console.log(email + ' ' + name);
+
+    // const formData = new FormData();
+    // fillOutTheForm(formData, 'users', 'email', 'name');
+    // formData.append('email', email);
+    // formData.append('name', name);
+
+    await updateSettings({ email, name }, 'data');
+  });
+}
+
+if (passwordChangeForm) {
+  passwordChangeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelector('button#save-new-password').textContent =
+      'UPDATING...';
+    const passwordCurrent = document.getElementById('passwordCurrent').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+    await updateSettings({ passwordCurrent, password, passwordConfirm });
+
+    document.getElementById('passwordCurrent').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('passwordConfirm').value = '';
+    document.querySelector('button#save-new-password').textContent =
+      'SAVE PASSWORD';
   });
 }

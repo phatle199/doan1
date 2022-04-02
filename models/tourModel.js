@@ -62,8 +62,7 @@ const tourSchema = new mongoose.Schema(
       minlength: [30, 'Summary must have at least 30 characters'],
     },
     startDates: {
-      type: [String],
-      required: [true, 'A tour must have start dates'],
+      type: [Date],
     },
     startLocation: {
       type: {
@@ -96,7 +95,7 @@ const tourSchema = new mongoose.Schema(
         },
       ],
       validate: {
-        validator: (value) => Array.isArray(value) && value.length > 0,
+        validator: (value) => value.length > 0,
         message: 'A tour must have at least 1 guide',
       },
     },

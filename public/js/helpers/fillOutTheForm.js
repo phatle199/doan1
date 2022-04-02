@@ -18,10 +18,11 @@ const fillOutTheForm = (form, entity, ...fields) => {
         selectedGuides.push(option.value);
       }
     }
+    form.append('guides', selectedGuides);
 
-    if (!(selectedGuides.length === 0)) {
-      form.append('guides', selectedGuides);
-    }
+    // if (selectedGuides.length !== 0) {
+    //   form.append('guides', selectedGuides);
+    // }
 
     // Xử lý file upload
     const imageCover = document.getElementById('imageCover').files[0];
@@ -51,7 +52,7 @@ const fillOutTheForm = (form, entity, ...fields) => {
 
   if (entity === 'users') {
     // Nếu có upload file hình ảnh
-    const photo = document.querySelector('#photo').files[0];
+    const photo = document.querySelector('#photo')?.files[0];
     if (photo) {
       form.append('photo', photo);
     }

@@ -42,6 +42,7 @@ const filterUpdateFields = (filterObject, ...allowedFields) => {
 };
 
 exports.updateMyData = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   // Check if user update password with this route
   if (req.body.password) {
     return next(

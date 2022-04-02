@@ -38,8 +38,8 @@ const DUMMY_USERS = JSON.parse(
 
 const importDummyData = async () => {
   try {
-    await User.create(DUMMY_USERS, { validateBeforeSave: false });
     await Tour.create(DUMMY_TOURS, { validateBeforeSave: false });
+    // await User.create(DUMMY_USERS, { validateBeforeSave: false });
 
     console.log('Imported dummy data successfully 👍');
   } catch (err) {
@@ -51,7 +51,7 @@ const importDummyData = async () => {
 const deleteDataFromACollections = async () => {
   try {
     await Tour.deleteMany();
-    await User.deleteMany();
+    // await User.deleteMany();
     console.log('Deleted data successfully 👍');
   } catch (err) {
     console.log('Something went wrong when deleting data 💥', err);
