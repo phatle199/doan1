@@ -7,13 +7,23 @@ block userview
       label(for="email") Email address
       input(type="email" class="form-control" id="email" value=`${user.email}`)
       .invalid-feedback
+
     div(class="form-group")
       label(for="name") Name
       input(type="name" class="form-control" id="name" value=`${user.name}`)
       .invalid-feedback
-    //- div(class="form-group")
-    //-   label(for="name") Photo
-    //-   input(type="name" class="form-control" id="name" placeholder=`${user.name}`)
+
+    // FILE UPLOAD INPUT
+    .m-auto.d-flex.justify-content-center.col-sm-6
+      img#preview.img-thumbnail.w-50.h-50(src=`/img/users/${user.photo}`)
+    label(for="photo") Photo
+    input#photo(type="file" name="img[]" accept="image/*" style="visibility: hidden;position: absolute;")
+    .input-group.mb-3
+      input.form-control#file(type="text" disabled placeholder="Upload File")
+      .input-group-append
+        button.browse.btn.btn-dark(type="button") Browse...
+    #commonError.text-danger
+
     button.btn.btn-success.btn-block#save-user-data SAVE SETTINGS
 
   hr

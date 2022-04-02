@@ -47,35 +47,35 @@ if (nextButton) {
 
 // AUTH
 if (signupForm) {
-  signupForm.addEventListener('submit', (e) => {
+  signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.querySelector('#name').value;
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;
     const passwordConfirm = document.querySelector('#passwordConfirm').value;
-    signup(name, email, password, passwordConfirm);
+    await signup(name, email, password, passwordConfirm);
   });
 }
 
 if (loginForm) {
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;
-    login(email, password);
+    await login(email, password);
   });
 }
 
 if (logoutBtn) {
-  logoutBtn.addEventListener('click', (e) => {
+  logoutBtn.addEventListener('click', async (e) => {
     e.preventDefault();
-    logout();
+    await logout();
   });
 }
 
 // MANAGE TOURS
 if (addNewTourForm) {
-  addNewTourForm.addEventListener('submit', (e) => {
+  addNewTourForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = new FormData();
 
@@ -93,12 +93,12 @@ if (addNewTourForm) {
       'imageCover'
     );
 
-    addOneDocument(form, 'tours');
+    await addOneDocument(form, 'tours');
   });
 }
 
 if (changeTourForm) {
-  changeTourForm.addEventListener('submit', (e) => {
+  changeTourForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = new FormData();
     fillOutTheForm(
@@ -114,7 +114,11 @@ if (changeTourForm) {
       'guides'
     );
 
-    updateOneDocument(form, document.querySelector('#tour-id').value, 'tours');
+    await updateOneDocument(
+      form,
+      document.querySelector('#tour-id').value,
+      'tours'
+    );
   });
 }
 
@@ -128,7 +132,7 @@ if (deleteTourBtn) {
 
 // MANAGE USERS
 if (addNewUserForm) {
-  addNewUserForm.addEventListener('submit', (e) => {
+  addNewUserForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = new FormData();
     fillOutTheForm(
@@ -141,12 +145,12 @@ if (addNewUserForm) {
       'role'
     );
 
-    addOneDocument(form, 'users');
+    await addOneDocument(form, 'users');
   });
 }
 
 if (changeUserForm) {
-  changeUserForm.addEventListener('submit', (e) => {
+  changeUserForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = new FormData();
     if (document.querySelector('#password').value !== '') {
@@ -163,10 +167,23 @@ if (changeUserForm) {
       fillOutTheForm(form, 'users', 'photo', 'name', 'email', 'role');
     }
 
-    updateOneDocument(form, document.querySelector('#user-id').value, 'users');
+    await updateOneDocument(
+      form,
+      document.querySelector('#user-id').value,
+      'users'
+    );
   });
 }
 
+if (deleteUserBtn) {
+  deleteUserBtn.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      await deleteOneDocument(btn.dataset.userid, 'users');
+    });
+  });
+}
+
+// PREVIEW PHOTO
 if (browseBtn) {
   // Thêm tính năng hiển thị hình sau khi chọn file xong
   browseBtn.addEventListener('click', function () {
@@ -192,28 +209,15 @@ if (browseBtn) {
     });
 }
 
-if (deleteUserBtn) {
-  deleteUserBtn.forEach((btn) => {
-    btn.addEventListener('click', async (e) => {
-      await deleteOneDocument(btn.dataset.userid, 'users');
-    });
-  });
-}
-
+// ACCOUNT SETTINGS
 if (accountSettingsForm) {
   accountSettingsForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const name = document.getElementById('name').value;
-    console.log(email + ' ' + name);
+    const form = new FormData();
+    fillOutTheForm(form, 'users', 'email', 'name', 'photo');
 
-    // const formData = new FormData();
-    // fillOutTheForm(formData, 'users', 'email', 'name');
-    // formData.append('email', email);
-    // formData.append('name', name);
-
-    await updateSettings({ email, name }, 'data');
+    await updateSettings(form, 'data');
   });
 }
 

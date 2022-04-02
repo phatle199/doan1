@@ -9760,72 +9760,166 @@ if (nextButton) {
 
 
 if (signupForm) {
-  signupForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var name = document.querySelector('#name').value;
-    var email = document.querySelector('#email').value;
-    var password = document.querySelector('#password').value;
-    var passwordConfirm = document.querySelector('#passwordConfirm').value;
-    (0, _auth.signup)(name, email, password, passwordConfirm);
-  });
+  signupForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var name, email, password, passwordConfirm;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              name = document.querySelector('#name').value;
+              email = document.querySelector('#email').value;
+              password = document.querySelector('#password').value;
+              passwordConfirm = document.querySelector('#passwordConfirm').value;
+              _context.next = 7;
+              return (0, _auth.signup)(name, email, password, passwordConfirm);
+
+            case 7:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
 }
 
 if (loginForm) {
-  loginForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var email = document.querySelector('#email').value;
-    var password = document.querySelector('#password').value;
-    (0, _auth.login)(email, password);
-  });
+  loginForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+      var email, password;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              e.preventDefault();
+              email = document.querySelector('#email').value;
+              password = document.querySelector('#password').value;
+              _context2.next = 5;
+              return (0, _auth.login)(email, password);
+
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
 }
 
 if (logoutBtn) {
-  logoutBtn.addEventListener('click', function (e) {
-    e.preventDefault();
-    (0, _auth.logout)();
-  });
+  logoutBtn.addEventListener('click', /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              e.preventDefault();
+              _context3.next = 3;
+              return (0, _auth.logout)();
+
+            case 3:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function (_x3) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
 } // MANAGE TOURS
 
 
 if (addNewTourForm) {
-  addNewTourForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var form = new FormData();
-    (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides', 'imageCover');
-    (0, _crud.addOneDocument)(form, 'tours');
-  });
+  addNewTourForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(e) {
+      var form;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              e.preventDefault();
+              form = new FormData();
+              (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides', 'imageCover');
+              _context4.next = 5;
+              return (0, _crud.addOneDocument)(form, 'tours');
+
+            case 5:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function (_x4) {
+      return _ref4.apply(this, arguments);
+    };
+  }());
 }
 
 if (changeTourForm) {
-  changeTourForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var form = new FormData();
-    (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides');
-    (0, _crud.updateOneDocument)(form, document.querySelector('#tour-id').value, 'tours');
-  });
+  changeTourForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+      var form;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              e.preventDefault();
+              form = new FormData();
+              (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides');
+              _context5.next = 5;
+              return (0, _crud.updateOneDocument)(form, document.querySelector('#tour-id').value, 'tours');
+
+            case 5:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }));
+
+    return function (_x5) {
+      return _ref5.apply(this, arguments);
+    };
+  }());
 }
 
 if (deleteTourBtn) {
   deleteTourBtn.forEach(function (btn) {
     btn.addEventListener('click', /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _context.next = 2;
+                _context6.next = 2;
                 return (0, _crud.deleteOneDocument)(btn.dataset.tourid, 'tours');
 
               case 2:
               case "end":
-                return _context.stop();
+                return _context6.stop();
             }
           }
-        }, _callee);
+        }, _callee6);
       }));
 
-      return function (_x) {
-        return _ref.apply(this, arguments);
+      return function (_x6) {
+        return _ref6.apply(this, arguments);
       };
     }());
   });
@@ -9833,28 +9927,93 @@ if (deleteTourBtn) {
 
 
 if (addNewUserForm) {
-  addNewUserForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var form = new FormData();
-    (0, _fillOutTheForm.default)(form, 'users', 'name', 'email', 'password', 'passwordConfirm', 'role');
-    (0, _crud.addOneDocument)(form, 'users');
-  });
+  addNewUserForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e) {
+      var form;
+      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              e.preventDefault();
+              form = new FormData();
+              (0, _fillOutTheForm.default)(form, 'users', 'name', 'email', 'password', 'passwordConfirm', 'role');
+              _context7.next = 5;
+              return (0, _crud.addOneDocument)(form, 'users');
+
+            case 5:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7);
+    }));
+
+    return function (_x7) {
+      return _ref7.apply(this, arguments);
+    };
+  }());
 }
 
 if (changeUserForm) {
-  changeUserForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var form = new FormData();
+  changeUserForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(e) {
+      var form;
+      return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              e.preventDefault();
+              form = new FormData();
 
-    if (document.querySelector('#password').value !== '') {
-      (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'password', 'role');
-    } else {
-      (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'role');
-    }
+              if (document.querySelector('#password').value !== '') {
+                (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'password', 'role');
+              } else {
+                (0, _fillOutTheForm.default)(form, 'users', 'photo', 'name', 'email', 'role');
+              }
 
-    (0, _crud.updateOneDocument)(form, document.querySelector('#user-id').value, 'users');
-  });
+              _context8.next = 5;
+              return (0, _crud.updateOneDocument)(form, document.querySelector('#user-id').value, 'users');
+
+            case 5:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8);
+    }));
+
+    return function (_x8) {
+      return _ref8.apply(this, arguments);
+    };
+  }());
 }
+
+if (deleteUserBtn) {
+  deleteUserBtn.forEach(function (btn) {
+    btn.addEventListener('click', /*#__PURE__*/function () {
+      var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(e) {
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _context9.next = 2;
+                return (0, _crud.deleteOneDocument)(btn.dataset.userid, 'users');
+
+              case 2:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9);
+      }));
+
+      return function (_x9) {
+        return _ref9.apply(this, arguments);
+      };
+    }());
+  });
+} // PREVIEW PHOTO
+
 
 if (browseBtn) {
   // Thêm tính năng hiển thị hình sau khi chọn file xong
@@ -9875,84 +10034,51 @@ if (browseBtn) {
 
     reader.readAsDataURL(this.files[0]);
   });
-}
+} // ACCOUNT SETTINGS
 
-if (deleteUserBtn) {
-  deleteUserBtn.forEach(function (btn) {
-    btn.addEventListener('click', /*#__PURE__*/function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return (0, _crud.deleteOneDocument)(btn.dataset.userid, 'users');
-
-              case 2:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }));
-
-      return function (_x2) {
-        return _ref2.apply(this, arguments);
-      };
-    }());
-  });
-}
 
 if (accountSettingsForm) {
   accountSettingsForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-      var email, name;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(e) {
+      var form;
+      return regeneratorRuntime.wrap(function _callee10$(_context10) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context10.prev = _context10.next) {
             case 0:
               e.preventDefault();
-              email = document.getElementById('email').value;
-              name = document.getElementById('name').value;
-              console.log(email + ' ' + name); // const formData = new FormData();
-              // fillOutTheForm(formData, 'users', 'email', 'name');
-              // formData.append('email', email);
-              // formData.append('name', name);
+              form = new FormData();
+              (0, _fillOutTheForm.default)(form, 'users', 'email', 'name', 'photo');
+              _context10.next = 5;
+              return (0, _updateSettings.default)(form, 'data');
 
-              _context3.next = 6;
-              return (0, _updateSettings.default)({
-                email: email,
-                name: name
-              }, 'data');
-
-            case 6:
+            case 5:
             case "end":
-              return _context3.stop();
+              return _context10.stop();
           }
         }
-      }, _callee3);
+      }, _callee10);
     }));
 
-    return function (_x3) {
-      return _ref3.apply(this, arguments);
+    return function (_x10) {
+      return _ref10.apply(this, arguments);
     };
   }());
 }
 
 if (passwordChangeForm) {
   passwordChangeForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(e) {
+    var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(e) {
       var passwordCurrent, password, passwordConfirm;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      return regeneratorRuntime.wrap(function _callee11$(_context11) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context11.prev = _context11.next) {
             case 0:
               e.preventDefault();
               document.querySelector('button#save-new-password').textContent = 'UPDATING...';
               passwordCurrent = document.getElementById('passwordCurrent').value;
               password = document.getElementById('password').value;
               passwordConfirm = document.getElementById('passwordConfirm').value;
-              _context4.next = 7;
+              _context11.next = 7;
               return (0, _updateSettings.default)({
                 passwordCurrent: passwordCurrent,
                 password: password,
@@ -9967,14 +10093,14 @@ if (passwordChangeForm) {
 
             case 11:
             case "end":
-              return _context4.stop();
+              return _context11.stop();
           }
         }
-      }, _callee4);
+      }, _callee11);
     }));
 
-    return function (_x4) {
-      return _ref4.apply(this, arguments);
+    return function (_x11) {
+      return _ref11.apply(this, arguments);
     };
   }());
 }
