@@ -111,6 +111,8 @@ const tourSchema = new mongoose.Schema(
     },
   },
   {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
     timestamps: true,
   }
 );
@@ -122,6 +124,13 @@ const tourSchema = new mongoose.Schema(
 
 //   next();
 // });
+
+// virtual populate review on a tour
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
 
 // Modelling Tour Guides: Child referencing
 tourSchema.pre(/^find/, function (next) {
