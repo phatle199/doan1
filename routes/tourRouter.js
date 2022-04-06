@@ -1,6 +1,6 @@
 const express = require('express');
-const tourController = require('../controllers/tourController');
-const authController = require('../controllers/authController');
+const tourController = require('./../controllers/tourController');
+const reviewRouter = require('./reviewRouter');
 
 const router = express.Router();
 
@@ -22,5 +22,7 @@ router
     tourController.updateTour
   )
   .delete(tourController.deleteTour);
+
+router.use('/:tourId/reviews', reviewRouter);
 
 module.exports = router;
