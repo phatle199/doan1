@@ -4,6 +4,7 @@ const sharp = require('sharp');
 const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 // Configuring multer
 const multerStorage = multer.memoryStorage();
@@ -23,7 +24,10 @@ exports.uploadUserImage = upload.single('photo');
 exports.resizeUserImage = async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.body.email}-${Date.now()}.jpeg`;
+  // nếu update user không update email thì chạy query tìm email của user đang được update
+  const email = req.body.email || (await User.findById(req.params.id)).email;
+
+  req.file.filename = `user-${email}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
@@ -82,51 +86,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  if (!users) {
-    return next(new AppError('No users found', 400));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    users,
-  });
-});
-
-exports.getUser = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
-
-  const user = await User.findById(userId);
-
-  if (!user) {
-    return new AppError('No user found with that id', 400);
-  }
-
-  res.status(200).json({
-    status: 'success',
-    user,
-  });
-});
-
-exports.createUser = catchAsync(async (req, res, next) => {
-  if (req.file) {
-    req.body.photo = req.file.filename;
-  }
-
-  const user = await User.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    user,
-  });
-});
-
-exports.updateUser = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
-
+exports.getPasswordPhoto = async (req, res, next) => {
   if (req.body.password) {
     req.body.password = await bcrypt.hash(req.body.password, 12);
     req.body.passwordChangedAt = Date.now();
@@ -135,21 +95,19 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   if (req.file) {
     req.body.photo = req.file.filename;
   }
+  next();
+};
 
-  const user = await User.findByIdAndUpdate(userId, req.body);
+exports.getPhoto = async (req, res, next) => {
+  if (req.file) {
+    req.body.photo = req.file.filename;
+  }
 
-  res.status(200).json({
-    status: 'success',
-    user,
-  });
-});
+  next();
+};
 
-exports.deleteUser = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
-
-  await User.findByIdAndDelete(userId);
-
-  res.status(200).json({
-    status: 'success',
-  });
-});
+exports.getAllUsers = factory.getAll(User);
+exports.getUser = factory.getOne(User);
+exports.createUser = factory.createOne(User);
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);

@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 const Tour = require('../../models/tourModel');
-const User = require('../../models/userModel');
+// const User = require('../../models/userModel');
+const Review = require('../../models/reviewModel');
 
 // console.log(`${__dirname}/../config.env`);
 dotenv.config({ path: `${__dirname}/../../config.env` });
@@ -36,10 +37,15 @@ const DUMMY_USERS = JSON.parse(
   fs.readFileSync(`${__dirname}/users.json`, 'utf-8')
 );
 
+const DUMMY_REVIEWS = JSON.parse(
+  fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
+);
+
 const importDummyData = async () => {
   try {
-    await Tour.create(DUMMY_TOURS, { validateBeforeSave: false });
+    // await Tour.create(DUMMY_TOURS, { validateBeforeSave: false });
     // await User.create(DUMMY_USERS, { validateBeforeSave: false });
+    await Review.create(DUMMY_REVIEWS, { validateBeforeSave: false });
 
     console.log('Imported dummy data successfully 👍');
   } catch (err) {
@@ -50,8 +56,9 @@ const importDummyData = async () => {
 
 const deleteDataFromACollections = async () => {
   try {
-    await Tour.deleteMany();
+    // await Tour.deleteMany();
     // await User.deleteMany();
+    await Review.deleteMany();
     console.log('Deleted data successfully 👍');
   } catch (err) {
     console.log('Something went wrong when deleting data 💥', err);

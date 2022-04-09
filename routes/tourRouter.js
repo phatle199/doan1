@@ -10,15 +10,17 @@ router
   .post(
     tourController.uploadTourImageCover,
     tourController.resizeTourImageCover,
+    tourController.getGuidesImageCoverLocations,
     tourController.createTour
   );
 
 router
-  .route('/:tourId')
+  .route('/:id')
   .get(tourController.getTour)
   .patch(
     tourController.uploadTourImageCover,
     tourController.resizeTourImageCover,
+    tourController.getGuidesImageCoverLocations,
     tourController.updateTour
   )
   .delete(tourController.deleteTour);

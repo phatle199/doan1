@@ -32,15 +32,17 @@ router
   .post(
     userController.uploadUserImage,
     userController.resizeUserImage,
+    userController.getPhoto,
     userController.createUser
   );
 
 router
-  .route('/:userId')
+  .route('/:id')
   .get(userController.getUser)
   .patch(
     userController.uploadUserImage,
     userController.resizeUserImage,
+    userController.getPasswordPhoto,
     userController.updateUser
   )
   .delete(userController.deleteUser);

@@ -59,7 +59,7 @@ const tourSchema = new mongoose.Schema(
     description: {
       type: String,
       required: [true, 'A tour must have a description'],
-      minlength: [30, 'Summary must have at least 30 characters'],
+      minlength: [30, 'Description must have at least 30 characters'],
     },
     startDates: {
       type: [Date],
