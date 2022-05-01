@@ -44,7 +44,6 @@ const sendErrorProd = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     // Operational, trusted error
     if (err.isOperational) {
-      console.log('Tao chạy vô đây nè', err);
       return res.status(err.statusCode).json({
         status: err.statusCode,
         message: err.message,

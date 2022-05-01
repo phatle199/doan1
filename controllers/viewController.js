@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
 const APIFeatures = require('../utils/APIFeatures');
 const AppError = require('../utils/AppError');
 
@@ -57,6 +58,17 @@ exports.getMe = (req, res, next) => {
     pathname: req.path,
     server: 1,
   });
+};
+
+exports.getMyTours = async (req, res, next) => {
+  // 1. Lấy tất cả bookings thuộc về người dùng đang đăng nhập
+  const bookings = await Booking.find({ user: req.user.id });
+
+  // 2. Lấy ra các tours
+  const tourIDs = bookings.map((el) => el.tour);
+  const tours = await Tour.find({ _id: { $in: tourIDs } });
+
+  res.status(200).render('overview', { title: 'My tours', tours });
 };
 
 // TOUR

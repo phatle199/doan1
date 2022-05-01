@@ -6,6 +6,7 @@ import fillOutTheForm from './helpers/fillOutTheForm';
 import { previousButtonHandler, nextButtonHandler } from './pagination';
 import showLocationsFormButtonHandler from './insertLocationsForm';
 import updateSettings from './updateSettings';
+import { bookTour } from './stripe';
 
 // DOM
 const signupForm = document.querySelector('#signup-form');
@@ -34,6 +35,16 @@ const accountSettingsForm = document.querySelector('#account-settings-form');
 const passwordChangeForm = document.querySelector('#password-change-form');
 
 const locations = document.querySelector('#map');
+
+const bookTourBtn = document.querySelector('#booking-tour');
+
+if (bookTourBtn) {
+  bookTourBtn.addEventListener('click', (e) => {
+    e.target.textContent = 'Processing...';
+    const { tourId } = e.target.dataset;
+    bookTour(tourId);
+  });
+}
 
 // map
 if (locations) displayMap(JSON.parse(locations.dataset.locations));

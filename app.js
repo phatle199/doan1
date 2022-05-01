@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const csp = require('express-csp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const hpp = require('hpp');
@@ -23,12 +24,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 // MIDDLEWARE
 // Secure HTTP Headers
-// app.use(helmet());
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   })
-// );
 app.use(
   helmet({
     contentSecurityPolicy: {

@@ -202,6 +202,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
 
+    console.log(err);
+
     res.status(500).json({
       status: 'error',
       message: 'Could not send email. Please try again later.',
