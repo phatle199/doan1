@@ -3,11 +3,11 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const csp = require('express-csp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const router = require('./routes');
 const AppError = require('./utils/AppError');
@@ -17,6 +17,9 @@ const app = express();
 
 // serving static file
 app.use(express.static(path.join(__dirname, 'public')));
+
+// compression
+app.use(compression());
 
 // set up template engine: pug
 app.set('view engine', 'pug');
