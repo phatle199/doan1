@@ -2,7 +2,7 @@ import axios from 'axios';
 import catchAsync from './helpers/catchAsync';
 
 export default catchAsync(async (data, type) => {
-  const url = `http://127.0.0.1:5000/api/v1/users/${
+  const url = `/api/v1/users/${
     type === 'data' ? 'update-my-data' : 'update-my-password'
   }`;
 

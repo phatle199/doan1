@@ -6,9 +6,7 @@ export const bookTour = async (tourId) => {
       'pk_test_51KGH6hJqNiS0Gthfv7kbDh7kzPR7jIKFMSlP9E8WtdcJcbiO4lWSQCBDr9oYeJXV6J7yKnhfV1FhUtTE70lZ5AdW00CRJPMdvj'
     );
     // 1. Lấy checkout session từ server
-    const session = await axios(
-      `http://127.0.0.1:5000/api/v1/bookings/checkout-session/${tourId}`
-    );
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
 
     // 2. Tạo form thanh toán từ session đó
     await stripe.redirectToCheckout({
