@@ -1,5 +1,6 @@
 import '@babel/polyfill';
 import { login, logout, signup } from './auth';
+import { displayMap } from './mapbox';
 import { addOneDocument, updateOneDocument, deleteOneDocument } from './crud';
 import fillOutTheForm from './helpers/fillOutTheForm';
 import { previousButtonHandler, nextButtonHandler } from './pagination';
@@ -31,6 +32,11 @@ const showLocationsFormButton = document.querySelector(
 
 const accountSettingsForm = document.querySelector('#account-settings-form');
 const passwordChangeForm = document.querySelector('#password-change-form');
+
+const locations = document.querySelector('#map');
+
+// map
+if (locations) displayMap(JSON.parse(locations.dataset.locations));
 
 // ACTIONS
 if (showLocationsFormButton) {

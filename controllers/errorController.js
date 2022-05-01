@@ -22,25 +22,56 @@ const handleJsonWebTokenError = (err) => {
 };
 
 const sendErrorDev = (err, req, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    stack: err.stack,
-    error: err,
+  // A) API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+      stack: err.stack,
+      error: err,
+    });
+  }
+
+  // RENDERED WEBSITE
+  res.status(err.statusCode).render('error', {
+    title: 'Some thing went wrong',
+    msg: err.message,
   });
 };
 
 const sendErrorProd = (err, req, res) => {
-  if (err.isOperational) {
-    return res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
+  // 1) API
+  if (req.originalUrl.startsWith('/api')) {
+    // Operational, trusted error
+    if (err.isOperational) {
+      console.log('Tao chạy vô đây nè', err);
+      return res.status(err.statusCode).json({
+        status: err.statusCode,
+        message: err.message,
+      });
+    }
+
+    // unknown error
+    console.log('ERROR 💥', err);
+    return res.status(500).json({
+      status: 'fail',
+      message: 'Something went very wrong',
     });
   }
-  res.status(err.statusCode).json({
-    status: 500,
-    message:
-      'Có cái gì sai sai ở phía server rồi pạn êy. Thử lại sau nhé hihi 😁😁😁',
+
+  // RENDERED VIEW
+  if (err.isOperational) {
+    // Operational, trusted error
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong',
+      msg: err.message,
+    });
+  }
+
+  // unknown error
+  res.status(err.statusCode).render('error', {
+    title: 'Something went wrong',
+    message: 'Something went wrong. Please try again later.',
   });
 };
 
@@ -52,7 +83,7 @@ exports.globalErrorHandler = (err, req, res, next) => {
 
   if (process.env.NODE_ENV === 'production') {
     let error = Object.assign(err); // clone ra 1 object error, dùng let vì cần gán lại
-    // console.log(error.name);
+
     if (error.name === 'CastError') error = handleCastError(error);
     if (error.code === 11000) error = handleDuplicateError(error);
     if (error._message && error._message.includes('validation failed'))

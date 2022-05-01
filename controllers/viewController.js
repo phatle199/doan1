@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const APIFeatures = require('../utils/APIFeatures');
+const AppError = require('../utils/AppError');
 
 exports.getOverview = async (req, res, next) => {
   const tours = await Tour.find();
@@ -12,18 +13,32 @@ exports.getOverview = async (req, res, next) => {
 };
 
 exports.getTour = async (req, res, next) => {
-  const tour = await Tour.findById(req.params.tourId);
-
-  res.status(200).render('tour', {
-    title: tour.name,
-    tour,
+  const tour = await Tour.findById(req.params.tourId).populate({
+    path: 'reviews',
+    select: 'review rating user',
   });
+
+  if (!tour) {
+    return next(new AppError('No tour found with that id.', 404));
+  }
+
+  res
+    .status(200)
+    // .set(
+    //   'Content-Security-Policy',
+    //   "default-src 'self' https://*.mapbox.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;"
+    // )
+    .render('tour', {
+      title: tour.name,
+      tour,
+    });
 };
 
 exports.getLoginForm = (req, res, next) => {
   res.status(200).render('auth/login', {
     title: 'Login',
     pathname: req.path,
+    server: 1,
   });
 };
 
@@ -31,6 +46,7 @@ exports.getSignupForm = (req, res, next) => {
   res.status(200).render('auth/signup', {
     title: 'Signup',
     pathname: req.path,
+    server: 1,
   });
 };
 
@@ -39,6 +55,7 @@ exports.getMe = (req, res, next) => {
     title: req.user.name,
     user: req.user,
     pathname: req.path,
+    server: 1,
   });
 };
 
@@ -58,6 +75,7 @@ exports.getToursList = async (req, res, next) => {
     pathname: req.path,
     pageSize: Math.ceil(numberOfTours / 5),
     currentPage: Number(req.query.page),
+    server: 1,
   });
 };
 
@@ -86,6 +104,7 @@ exports.getUpdateTourForm = async (req, res, next) => {
     selectedGuides,
     restOfTourGuides,
     pathname: req.path,
+    server: 1,
   });
 };
 
@@ -94,10 +113,11 @@ exports.getCreateTourForm = async (req, res, next) => {
     $or: [{ role: 'guide' }, { role: 'lead-guide' }],
   });
 
-  res.status(200).render('manage-tours/create', {
+  res.status(200).render('manage-tours/add', {
     title: 'Add New Tour',
     guides,
     pathname: req.path,
+    server: 1,
   });
 };
 
@@ -116,6 +136,7 @@ exports.getUsersList = async (req, res, next) => {
     pathname: req.path,
     pageSize: Math.ceil(numberOfTours / 5),
     currentPage: Number(req.query.page),
+    server: 1,
   });
 };
 
@@ -127,6 +148,7 @@ exports.getUpdateUserForm = async (req, res, next) => {
     user: req.user,
     selectedUser,
     pathname: req.path,
+    server: 1,
   });
 };
 
@@ -134,5 +156,6 @@ exports.getCreateUserForm = (req, res) => {
   res.status(200).render('manage-users/add', {
     title: 'Add New User',
     pathname: req.path,
+    server: 1,
   });
 };

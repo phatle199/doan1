@@ -1,7 +1,7 @@
 const errorMessageHandler = (error) => {
   let errorsArray;
   // xử lý lỗi validation
-  if (error.error.name === 'ValidationError') {
+  if (error.error?.name === 'ValidationError') {
     errorsArray = error.message
       .slice(error.message.indexOf('failed: ') + 'failed: '.length)
       .split(', ');
@@ -9,14 +9,14 @@ const errorMessageHandler = (error) => {
   }
 
   // Xử lý lỗi bị trùng lặp
-  if (error.error.code === 11000) {
+  if (error.error?.code === 11000) {
     const field = Object.keys(error.error.keyValue)[0];
     const value = error.error.keyValue[Object.keys(error.error.keyValue)[0]];
     errorsArray = [`${field}: ${value} has already used. Try another one.`];
   }
 
   // xử lý lỗi chung chung
-  if (error.status === 'fail') {
+  if (error.status === 'fail' || error.status === 401) {
     errorsArray = [`commonError: ${error.message}`];
   }
 
@@ -66,11 +66,9 @@ const catchAsync = (fn) => {
         commonErrorElement.innerText = '';
       }
 
-      console.log(error);
-
       // Chuyển đổi error từ string sang object
       const errorsObj = errorMessageHandler(error.response.data);
-
+      console.log(error.response.data);
       // Hiển thị lỗi dưới mỗi input
       if (error.response.data.status === 'error') {
         Object.keys(errorsObj).forEach((key) => {
@@ -78,8 +76,8 @@ const catchAsync = (fn) => {
           addErrorMessage('select', key, errorsObj);
           addErrorMessage('textarea', key, errorsObj);
         });
-        // Hiển thị lỗi chung chung trên một hàng
-      } else if (error.response.data.status === 'fail') {
+        // Hiển thị lỗi chung
+      } else {
         commonErrorElement.innerText = error.response.data.message;
       }
     });

@@ -1,6 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('./../models/tourModel');
-const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
