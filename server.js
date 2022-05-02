@@ -43,6 +43,8 @@ process.on('unhandledRejection', (err) => {
   });
 });
 
+// Heroku gửi sigterm signal mỗi 24 tiếng để restart lại app
+// Code dưới đảm bảo các request sẽ được tiếp tục thực hiện sau khi app được dừng
 process.on('SIGTERM', () => {
   console.log('👋 SIGTERM RECIEVED. Shutting down');
   server.close(() => {
