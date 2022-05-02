@@ -15,6 +15,8 @@ const errorController = require('./controllers/errorController');
 
 const app = express();
 
+app.enable('trust proxy');
+
 // serving static file
 app.use(express.static(path.join(__dirname, 'public')));
 

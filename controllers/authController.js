@@ -12,7 +12,7 @@ const generateToken = (id) => {
   });
 };
 
-const createAndSendToken = (user, res, statusCode) => {
+const createAndSendToken = (user, res, req, statusCode) => {
   const token = generateToken(user._id);
 
   const cookieOptions = {
@@ -20,9 +20,8 @@ const createAndSendToken = (user, res, statusCode) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   };
-
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
   res.cookie('jwt', token, cookieOptions);
 
@@ -50,7 +49,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     `${req.protocol}://${req.get('host')}/me`
   ).sendWelcome();
 
-  createAndSendToken(user, res, 201);
+  createAndSendToken(user, res, req, 201);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -78,7 +77,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // Generate and send token
-  createAndSendToken(user, res, 200);
+  createAndSendToken(user, res, req, 200);
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
@@ -244,7 +243,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // Log the user in
-  createAndSendToken(user, res, 200);
+  createAndSendToken(user, res, req, 200);
 });
 
 exports.updateMyPassword = catchAsync(async (req, res, next) => {
@@ -261,5 +260,5 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = passwordConfirm;
   await user.save();
 
-  createAndSendToken(user, res, 200);
+  createAndSendToken(user, res, req, 200);
 });
