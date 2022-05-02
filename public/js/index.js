@@ -257,5 +257,5 @@ if (passwordChangeForm) {
   });
 }
 
-const alertMessage = document.getElementsByTagName('body').dataset.alert;
+const alertMessage = document.getElementsByTagName('body')[0].dataset.alert;
 if (alertMessage) alert(alertMessage);
