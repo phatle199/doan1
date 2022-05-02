@@ -256,3 +256,6 @@ if (passwordChangeForm) {
       'SAVE PASSWORD';
   });
 }
+
+const alertMessage = document.getElementsByTagName('body').dataset.alert;
+if (alertMessage) alert(alertMessage);
