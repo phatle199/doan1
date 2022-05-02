@@ -13,6 +13,7 @@ const cors = require('cors');
 const router = require('./routes');
 const AppError = require('./utils/AppError');
 const errorController = require('./controllers/errorController');
+const bookingController = require('./controllers/bookingController');
 
 const app = express();
 
@@ -94,6 +95,12 @@ const limiter = rateLimit({
 });
 
 app.use('/api/v1', limiter);
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 // Body parser
 app.use(
