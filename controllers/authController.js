@@ -26,6 +26,7 @@ const createAndSendToken = (user, res, req, statusCode) => {
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
+
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -152,6 +153,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
       return next();
     }
 
+    req.user = currentUser;
     res.locals.user = currentUser;
     return next();
   }

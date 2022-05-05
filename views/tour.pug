@@ -81,7 +81,21 @@ block content
             each start in [1, 2, 3, 4, 5]
               svg.reviews__star(class=`reviews__star--${start <= tour.ratingsAverage ? 'active' : 'inactive'}`)
                 use(xlink:href='/img/icons.svg#icon-star')
-            
+
+    if currentUserDidNotReviewYet
+      h3(style='text-align:center; font-size: 200%; background-color: #f2f2f2;') Review Form
+      .container-review-form
+        form#review-form
+          p.text-center.text-danger#commonError
+          label(for='rating') Đánh giá
+          input#rating(type='number' placeholder='Số sao(từ 1 - 5)..' min=1 max=5 value=5)
+          .invalid-feedback
+
+          label(for='review') Nội dung
+          textarea#review(name='review' placeholder='Nội dung..' style='height:200px')
+          .invalid-feedback
+
+          input(type='submit' value='Submit')
 
   section.section-cta
     .cta

@@ -7,6 +7,7 @@ import { previousButtonHandler, nextButtonHandler } from './pagination';
 import showLocationsFormButtonHandler from './insertLocationsForm';
 import updateSettings from './updateSettings';
 import { bookTour } from './stripe';
+import addReview from './review';
 
 // DOM
 const signupForm = document.querySelector('#signup-form');
@@ -38,6 +39,9 @@ const locations = document.querySelector('#map');
 
 const bookTourBtn = document.querySelector('#booking-tour');
 
+const reviewForm = document.querySelector('#review-form');
+
+// ACTIONS
 if (bookTourBtn) {
   bookTourBtn.addEventListener('click', (e) => {
     e.target.textContent = 'Processing...';
@@ -49,7 +53,6 @@ if (bookTourBtn) {
 // map
 if (locations) displayMap(JSON.parse(locations.dataset.locations));
 
-// ACTIONS
 if (showLocationsFormButton) {
   showLocationsFormButtonHandler(showLocationsFormButton);
 }
@@ -259,3 +262,12 @@ if (passwordChangeForm) {
 
 const alertMessage = document.getElementsByTagName('body')[0].dataset.alert;
 if (alertMessage) alert(alertMessage);
+
+if (reviewForm) {
+  reviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const content = document.querySelector('#review')?.value;
+    const rating = document.querySelector('#review-rating')?.value;
+    await addReview(content, rating);
+  });
+}

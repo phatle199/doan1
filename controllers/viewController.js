@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
+const Review = require('../models/reviewModel');
 const APIFeatures = require('../utils/APIFeatures');
 const AppError = require('../utils/AppError');
 
@@ -29,16 +30,16 @@ exports.getTour = async (req, res, next) => {
     return next(new AppError('No tour found with that id.', 404));
   }
 
-  res
-    .status(200)
-    // .set(
-    //   'Content-Security-Policy',
-    //   "default-src 'self' https://*.mapbox.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;"
-    // )
-    .render('tour', {
-      title: tour.name,
-      tour,
-    });
+  let currentUserDidNotReviewYet = true;
+
+  const review = await Review.findOne({ tour: tour._id, user: req.user._id });
+  if (review) currentUserDidNotReviewYet = false;
+
+  res.status(200).render('tour', {
+    title: tour.name,
+    tour,
+    currentUserDidNotReviewYet,
+  });
 };
 
 exports.getLoginForm = (req, res, next) => {
