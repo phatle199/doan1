@@ -219,6 +219,7 @@ if (addNewReviewForm) {
     const user = document.querySelector('#user').value;
     const review = document.querySelector('#review').value;
     const rating = document.querySelector('#rating').value;
+
     await addOneDocument({ tour, user, review, rating }, 'reviews');
   });
 }
@@ -346,8 +347,8 @@ if (alertMessage) alert(alertMessage);
 if (reviewForm) {
   reviewForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const content = document.querySelector('#review')?.value;
-    const rating = document.querySelector('#review-rating')?.value;
+    const content = document.querySelector('#review').value;
+    const rating = document.querySelector('#rating').value;
     await addReview(content, rating);
   });
 }

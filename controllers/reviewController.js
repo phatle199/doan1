@@ -4,6 +4,7 @@ const factory = require('./handlerFactory');
 exports.getTourUserIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId;
   if (!req.body.user) req.body.user = req.user._id;
+  console.log('from getTourUserIds: ', req.body);
   next();
 };
 

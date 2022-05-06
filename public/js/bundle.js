@@ -10497,16 +10497,14 @@ if (alertMessage) alert(alertMessage);
 if (reviewForm) {
   reviewForm.addEventListener('submit', /*#__PURE__*/function () {
     var _ref18 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee18(e) {
-      var _document$querySelect, _document$querySelect2;
-
       var content, rating;
       return regeneratorRuntime.wrap(function _callee18$(_context18) {
         while (1) {
           switch (_context18.prev = _context18.next) {
             case 0:
               e.preventDefault();
-              content = (_document$querySelect = document.querySelector('#review')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.value;
-              rating = (_document$querySelect2 = document.querySelector('#review-rating')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.value;
+              content = document.querySelector('#review').value;
+              rating = document.querySelector('#rating').value;
               _context18.next = 5;
               return (0, _review.default)(content, rating);
 

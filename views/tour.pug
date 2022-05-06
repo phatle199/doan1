@@ -41,7 +41,7 @@ block content
           +overviewBox('Next date', date, 'calendar')
           +overviewBox('Difficulty', tour.difficulty, 'trending-up')
           +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
-          +overviewBox('Rating', `${tour.ratingsAverage.toFixed(2)} / 5`, 'star')
+          +overviewBox('Rating', `${tour.ratingsAverage.toFixed(1)} / 5`, 'star')
 
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Your tour guides
@@ -78,12 +78,12 @@ block content
             h6.reviews__user= review.user.name
           p.reviews__text= review.review
           .reviews__rating
-            each start in [1, 2, 3, 4, 5]
-              svg.reviews__star(class=`reviews__star--${start <= tour.ratingsAverage ? 'active' : 'inactive'}`)
+            each star in [1, 2, 3, 4, 5]
+              svg.reviews__star(class=`reviews__star--${star <= review.rating ? 'active' : 'inactive'}`)
                 use(xlink:href='/img/icons.svg#icon-star')
 
     if currentUserDidNotReviewYet
-      h3(style='text-align:center; font-size: 200%; background-color: #f2f2f2;') Review Form
+      h3(style="text-align:center; font-size: 250%; background-color: #f2f2f2; padding: 30px 0px 10px;") Review Form
       .container-review-form
         form#review-form
           p.text-center.text-danger#commonError
@@ -95,7 +95,7 @@ block content
           textarea#review(name='review' placeholder='Nội dung..' style='height:200px')
           .invalid-feedback
 
-          input(type='submit' value='Submit')
+          input(type='submit' value='Submit' style='font-size: 100%;')
 
   section.section-cta
     .cta

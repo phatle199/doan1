@@ -11,6 +11,7 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       min: 1,
       max: 5,
+      required: [true, 'Rating is required'],
     },
     tour: {
       type: mongoose.Schema.ObjectId,
