@@ -32,8 +32,10 @@ exports.getTour = async (req, res, next) => {
 
   let currentUserDidNotReviewYet = true;
 
-  const review = await Review.findOne({ tour: tour._id, user: req.user._id });
-  if (review) currentUserDidNotReviewYet = false;
+  if (req.user) {
+    const review = await Review.findOne({ tour: tour._id, user: req.user._id });
+    if (review) currentUserDidNotReviewYet = false;
+  }
 
   res.status(200).render('tour', {
     title: tour.name,
