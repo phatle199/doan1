@@ -84,10 +84,7 @@ exports.getMyTours = async (req, res, next) => {
 
 exports.getMyReviews = async (req, res, next) => {
   // Lấy tất cả bookings thuộc về người dùng đang đăng nhập
-  const reviews = await Review.find({ user: req.user.id }).populate({
-    path: 'tour',
-    select: 'name',
-  });
+  const reviews = await Review.find({ user: req.user.id });
 
   res.status(200).render('my-reviews', {
     title: 'My reviews',
@@ -195,5 +192,66 @@ exports.getCreateUserForm = (req, res) => {
     title: 'Add New User',
     pathname: req.path,
     server: 1,
+  });
+};
+
+// REVIEWS
+exports.getReviewsList = async (req, res, next) => {
+  if (!req.query.page) req.query.page = 1;
+  const numberOfReviews = await Review.count();
+  const features = new APIFeatures(Review.find({}), req.query).paginate();
+
+  const reviews = await features.query;
+
+  res.status(200).render('manage-reviews/list', {
+    title: 'Manage Reviews',
+    user: req.user,
+    reviews,
+    pathname: req.path,
+    pageSize: Math.ceil(numberOfReviews / 5),
+    currentPage: Number(req.query.page),
+    server: 1,
+  });
+};
+
+exports.getUpdateReviewForm = async (req, res, next) => {
+  const review = await Review.findById(req.params.reviewId);
+
+  // Get the rest of the tours
+  const tours = await Tour.find();
+  const restOfTours = [];
+  tours.forEach((tour) => {
+    if (tour.name !== review.tour.name) restOfTours.push(tour);
+  });
+
+  // Get the rest of the users
+  const users = await User.find();
+  const restOfUsers = [];
+
+  users.forEach((user) => {
+    if (user.email !== review.user.email) restOfUsers.push(user);
+  });
+
+  res.status(200).render('manage-reviews/update', {
+    title: 'Update Review',
+    user: req.user,
+    review,
+    restOfTours,
+    restOfUsers,
+    pathname: req.path,
+    server: 1,
+  });
+};
+
+exports.getCreateReviewForm = async (req, res) => {
+  const tours = await Tour.find();
+  const users = await User.find({ role: { $in: ['admin', 'user'] } });
+
+  res.status(200).render('manage-reviews/add', {
+    title: 'Add New Review',
+    pathname: req.path,
+    server: 1,
+    tours,
+    users,
   });
 };

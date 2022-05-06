@@ -1,0 +1,77 @@
+extends ../account
+
+mixin details(field, content)
+  .row
+    .col-4
+      h6= field
+    .col-7
+      p= content
+  
+mixin pageItem(pageNumber)
+  - const isActive = currentPage === pageNumber
+  li(class=`page-item ${isActive ? 'active' : ''}`)
+    a.page-link.page-number(href=`/me/manage-reviews?page=${pageNumber}`)= pageNumber
+
+block userview
+  - currentPage = currentPage < 1 ? 1 : currentPage
+  p.text-center.display-4 LIST OF REVIEWS
+
+  a.btn.btn-primary.mb-3(href="/me/manage-reviews/add") Add New Review
+  table.table.table-hover
+      thead.thead-dark
+        th #
+        th Tour
+        th User
+        th Content
+        th Rating
+        th Created at
+        th
+      tbody
+        - let i = (currentPage - 1) * 5;
+        each review in reviews
+          - i++;
+          tr
+            td= i
+            td= review.tour.name
+            td= review.user.name
+            td= review.review
+            td= review.rating
+            td= review.createdAt
+            td.d-flex.justify-content-around
+              a.btn.btn-info(href=`/me/manage-reviews/${review._id}`)
+                span.fa-solid.fa-square-pen
+              a.btn.btn-danger.text-white#btn-delete-review(data-reviewid=`${review._id}`)
+                span.fa-solid.fa-trash
+
+  // PAGINATION
+  nav(aria-label="Page navigation example")
+    ul.pagination.justify-content-center
+
+      li.page-item#previous
+        a.page-link(href="#" aria-label="Previous")
+          span(aria-hidden="true") &laquo;
+          span.sr-only Previous
+
+      - let pageNumber = currentPage
+      - const left = currentPage > 0 && currentPage < pageSize - 1
+      - const overPageNumber = currentPage > pageSize || currentPage < 1
+      
+      if overPageNumber
+        +pageItem(1)
+        +pageItem(2)
+        +pageItem(3)
+      else
+        if left
+          +pageItem(pageNumber)
+          +pageItem(pageNumber + 1)
+          +pageItem(pageNumber + 2)
+        else
+          +pageItem(pageNumber - 2)
+          +pageItem(pageNumber - 1)
+          +pageItem(pageNumber)      
+
+      li.page-item#next(data-page-size=`${pageSize}`)
+        a.page-link(href="#" aria-label="Next")
+          span(aria-hidden="true") &raquo;
+          span.sr-only Next
+  

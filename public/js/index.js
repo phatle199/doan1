@@ -22,6 +22,10 @@ const changeUserForm = document.querySelector('#change-user-form');
 const addNewUserForm = document.querySelector('#add-new-user-form');
 const deleteUserBtn = document.querySelectorAll('#btn-delete-user');
 
+const changeReviewForm = document.querySelector('#change-review-form');
+const addNewReviewForm = document.querySelector('#add-new-review-form');
+const deleteReviewBtn = document.querySelectorAll('#btn-delete-review');
+
 const browseBtn = document.querySelector('.browse');
 
 const previousButton = document.querySelector('li#previous');
@@ -199,6 +203,42 @@ if (deleteUserBtn) {
   deleteUserBtn.forEach((btn) => {
     btn.addEventListener('click', async (e) => {
       await deleteOneDocument(btn.dataset.userid, 'users');
+    });
+  });
+}
+
+// MANAGE REVIEWS
+if (addNewReviewForm) {
+  addNewReviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tour = document.querySelector('#tour').value;
+    const user = document.querySelector('#user').value;
+    const review = document.querySelector('#review').value;
+    const rating = document.querySelector('#rating').value;
+    await addOneDocument({ tour, user, review, rating }, 'reviews');
+  });
+}
+
+if (changeReviewForm) {
+  changeReviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tour = document.querySelector('#tour').value;
+    const user = document.querySelector('#user').value;
+    const review = document.querySelector('#review').value;
+    const rating = document.querySelector('#rating').value;
+
+    await updateOneDocument(
+      { tour, user, review, rating },
+      document.querySelector('#review-id').value,
+      'reviews'
+    );
+  });
+}
+
+if (deleteReviewBtn) {
+  deleteReviewBtn.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      await deleteOneDocument(btn.dataset.reviewid, 'reviews');
     });
   });
 }
