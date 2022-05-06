@@ -1,0 +1,21 @@
+extends account
+
+block userview
+  p.text-center.display-4 MY REVIEWS
+
+  table.table.table-hover
+    thead.thead-dark
+      th #
+      th Tour name
+      th Content
+      th Rating
+    tbody
+      - let i = 0;
+      each review in reviews
+        - i++;
+        tr
+          td= i
+          td= review.tour.name
+          td= review.review
+          td= review.rating
+              

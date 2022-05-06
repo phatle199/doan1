@@ -77,7 +77,24 @@ exports.getMyTours = async (req, res, next) => {
   const tourIDs = bookings.map((el) => el.tour);
   const tours = await Tour.find({ _id: { $in: tourIDs } });
 
-  res.status(200).render('overview', { title: 'My tours', tours });
+  res
+    .status(200)
+    .render('overview', { title: 'My tours', tours, pathname: req.path });
+};
+
+exports.getMyReviews = async (req, res, next) => {
+  // Lấy tất cả bookings thuộc về người dùng đang đăng nhập
+  const reviews = await Review.find({ user: req.user.id }).populate({
+    path: 'tour',
+    select: 'name',
+  });
+
+  res.status(200).render('my-reviews', {
+    title: 'My reviews',
+    reviews,
+    pathname: req.path,
+    server: 1,
+  });
 };
 
 // TOUR

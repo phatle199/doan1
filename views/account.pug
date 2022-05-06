@@ -8,7 +8,7 @@ block content
         nav.navbar.navbar-dark.navbar-expand-md
           ul.my-4.navbar-nav.flex-column.flex-nowrap.w-100
 
-            // USER
+            //- USER
             li.nav-item
               a(class=`nav-link ${pathname === '/me' ? 'active' : ''}` href=`/me`)
                 i(class=`pr-3 py-2 fas fa-solid fa-gear`) 
@@ -23,13 +23,8 @@ block content
               a(class=`nav-link ${pathname.includes('/my-reviews') ? 'active' : ''}` href=`/me/my-reviews`)
                 i.pr-3.py-2.fas.fa-solid.fa-star
                 span MY REVIEWS
-
-            li.nav-item
-              a(class=`nav-link ${pathname.includes('/my-billings') ? 'active' : ''}` href=`/me/my-billings`)
-                i.pr-3.py-2.fas.fa-solid.fa-wallet
-                span BILLINGS
             
-            // ADMIN
+            //- ADMIN
             - const isAdmin = user.role === 'admin';
             if isAdmin
             

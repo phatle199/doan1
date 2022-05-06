@@ -17,6 +17,11 @@ router.get('/login', authController.isLoggedIn, viewController.getLoginForm);
 router.get('/signup', authController.isLoggedIn, viewController.getSignupForm);
 router.get('/me', authController.protect, viewController.getMe);
 router.get('/me/my-tours', authController.protect, viewController.getMyTours);
+router.get(
+  '/me/my-reviews',
+  authController.protect,
+  viewController.getMyReviews
+);
 
 router.use(
   authController.protect,
