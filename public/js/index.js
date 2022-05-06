@@ -26,6 +26,10 @@ const changeReviewForm = document.querySelector('#change-review-form');
 const addNewReviewForm = document.querySelector('#add-new-review-form');
 const deleteReviewBtn = document.querySelectorAll('#btn-delete-review');
 
+const changeBookingForm = document.querySelector('#change-booking-form');
+const addNewBookingForm = document.querySelector('#add-new-booking-form');
+const deleteBookingBtn = document.querySelectorAll('#btn-delete-booking');
+
 const browseBtn = document.querySelector('.browse');
 
 const previousButton = document.querySelector('li#previous');
@@ -239,6 +243,42 @@ if (deleteReviewBtn) {
   deleteReviewBtn.forEach((btn) => {
     btn.addEventListener('click', async (e) => {
       await deleteOneDocument(btn.dataset.reviewid, 'reviews');
+    });
+  });
+}
+
+// MANAGE BOOKINGS
+if (addNewBookingForm) {
+  addNewBookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tour = document.querySelector('#tour').value;
+    const user = document.querySelector('#user').value;
+    const price = document.querySelector('#price').value;
+    const paid = document.querySelector('#paid').checked;
+    await addOneDocument({ tour, user, price, paid }, 'bookings');
+  });
+}
+
+if (changeBookingForm) {
+  changeBookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tour = document.querySelector('#tour').value;
+    const user = document.querySelector('#user').value;
+    const price = document.querySelector('#price').value;
+    const paid = document.querySelector('#paid').checked;
+
+    await updateOneDocument(
+      { tour, user, price, paid },
+      document.querySelector('#booking-id').value,
+      'bookings'
+    );
+  });
+}
+
+if (deleteBookingBtn) {
+  deleteBookingBtn.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      await deleteOneDocument(btn.dataset.bookingid, 'bookings');
     });
   });
 }

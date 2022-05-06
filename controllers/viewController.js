@@ -255,3 +255,64 @@ exports.getCreateReviewForm = async (req, res) => {
     users,
   });
 };
+
+// BOOKINGS
+exports.getBookingsList = async (req, res, next) => {
+  if (!req.query.page) req.query.page = 1;
+  const numberOfBookings = await Booking.count();
+  const features = new APIFeatures(Booking.find({}), req.query).paginate();
+
+  const bookings = await features.query;
+
+  res.status(200).render('manage-bookings/list', {
+    title: 'Manage Bookings',
+    user: req.user,
+    bookings,
+    pathname: req.path,
+    pageSize: Math.ceil(numberOfBookings / 5),
+    currentPage: Number(req.query.page),
+    server: 1,
+  });
+};
+
+exports.getUpdateBookingForm = async (req, res, next) => {
+  const booking = await Booking.findById(req.params.bookingId);
+
+  // Get the rest of the tours
+  const tours = await Tour.find();
+  const restOfTours = [];
+  tours.forEach((tour) => {
+    if (tour.name !== booking.tour.name) restOfTours.push(tour);
+  });
+
+  // Get the rest of the users
+  const users = await User.find();
+  const restOfUsers = [];
+
+  users.forEach((user) => {
+    if (user.email !== booking.user.email) restOfUsers.push(user);
+  });
+
+  res.status(200).render('manage-bookings/update', {
+    title: 'Update Review',
+    user: req.user,
+    booking,
+    restOfTours,
+    restOfUsers,
+    pathname: req.path,
+    server: 1,
+  });
+};
+
+exports.getCreateBookingForm = async (req, res) => {
+  const tours = await Tour.find();
+  const users = await User.find();
+
+  res.status(200).render('manage-bookings/add', {
+    title: 'Add New Booking',
+    pathname: req.path,
+    server: 1,
+    tours,
+    users,
+  });
+};

@@ -10,37 +10,37 @@ mixin details(field, content)
 mixin pageItem(pageNumber)
   - const isActive = currentPage === pageNumber
   li(class=`page-item ${isActive ? 'active' : ''}`)
-    a.page-link.page-number(href=`/me/manage-reviews?page=${pageNumber}`)= pageNumber
+    a.page-link.page-number(href=`/me/manage-bookings?page=${pageNumber}`)= pageNumber
 
 block userview
   - currentPage = currentPage < 1 ? 1 : currentPage
-  p.text-center.display-4 LIST OF REVIEWS
+  p.text-center.display-4 LIST OF BOOKINGS
 
-  a.btn.btn-primary.mb-3(href="/me/manage-reviews/add") Add New Review
+  a.btn.btn-primary.mb-3(href="/me/manage-bookings/add") Add New Booking
   table.table.table-hover
       thead.thead-dark
         th #
         th Tour
         th User
-        th Content
-        th Rating
+        th Price
+        th Paid
         th Created at
         th
       tbody
         - let i = (currentPage - 1) * 5;
-        each review in reviews
+        each booking in bookings
           - i++;
           tr
             td= i
-            td= review.tour.name
-            td= review.user.name
-            td= review.review
-            td= review.rating
-            td= review.createdAt.toLocaleDateString()
+            td= booking.tour.name
+            td= booking.user.name
+            td= booking.price
+            td= booking.paid
+            td= booking.createdAt.toLocaleDateString()
             td.d-flex.justify-content-around
-              a.btn.btn-info(href=`/me/manage-reviews/${review._id}`)
+              a.btn.btn-info(href=`/me/manage-bookings/${booking._id}`)
                 span.fa-solid.fa-square-pen
-              a.btn.btn-danger.text-white#btn-delete-review(data-reviewid=`${review._id}`)
+              a.btn.btn-danger.text-white#btn-delete-booking(data-bookingid=`${booking._id}`)
                 span.fa-solid.fa-trash
 
   // PAGINATION

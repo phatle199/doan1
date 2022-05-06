@@ -97,7 +97,7 @@ block userview
                 - const passwordChangedAt = user.passwordChangedAt ? new Date(user.passwordChangedAt).toLocaleString("vi") : 'Not changed yet';
                 +details('Password Changed At', passwordChangedAt)
                 +details('Role', user.role)
-                - const createdAt = new Date(user.createdAt).toLocaleString("vi");
+                - const createdAt = new Date(user.createdAt).toLocaleString();
                 +details('Created At', createdAt)
 
           //- Modal footer

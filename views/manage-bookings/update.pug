@@ -1,0 +1,45 @@
+extends ../account
+
+block userview
+  form.my-5.ml-3#change-booking-form
+    h4.mb-3.text-center Update Booking
+
+    .form-group
+      label(for="booking-id") Id
+      input.form-control#booking-id(type="text" value=`${booking._id}` disabled)
+      .invalid-feedback
+
+    .form-group
+      label(for="tour") Tour
+      select.form-control#tour(name="tour")
+        option(value="") --Choose a tour--
+        option(selected value=`${booking.tour._id}`)= booking.tour.name
+        each tour in restOfTours
+            option(value=`${tour._id}`)= tour.name
+      .invalid-feedback
+
+    .form-group
+      label(for="user") User
+      select.form-control#user(name="user")
+        option(value="") --Choose a user--
+        option(selected value=`${booking.user._id}`)= booking.user.email
+        each user in restOfUsers
+            option(value=`${user._id}`)= user.email
+      .invalid-feedback
+    
+    .form-group
+      label(for="price") Price
+      input.form-control#price(type="number" min='1' value=`${booking.price}`)
+      .invalid-feedback
+
+    .form-check.mb-3
+      label.form-check-label
+        if booking.paid
+          input.form-check-input#paid(type="checkbox" checked)
+          | Paid
+        else
+          input.form-check-input#paid(type="checkbox")
+          | Paid
+
+    button.btn.btn-success.btn-block(type="submit") Save changes
+    

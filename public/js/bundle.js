@@ -9913,6 +9913,9 @@ var deleteUserBtn = document.querySelectorAll('#btn-delete-user');
 var changeReviewForm = document.querySelector('#change-review-form');
 var addNewReviewForm = document.querySelector('#add-new-review-form');
 var deleteReviewBtn = document.querySelectorAll('#btn-delete-review');
+var changeBookingForm = document.querySelector('#change-booking-form');
+var addNewBookingForm = document.querySelector('#add-new-booking-form');
+var deleteBookingBtn = document.querySelectorAll('#btn-delete-booking');
 var browseBtn = document.querySelector('.browse');
 var previousButton = document.querySelector('li#previous');
 var nextButton = document.querySelector('li#next');
@@ -10298,6 +10301,103 @@ if (deleteReviewBtn) {
       };
     }());
   });
+} // MANAGE BOOKINGS
+
+
+if (addNewBookingForm) {
+  addNewBookingForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee13(e) {
+      var tour, user, price, paid;
+      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              e.preventDefault();
+              tour = document.querySelector('#tour').value;
+              user = document.querySelector('#user').value;
+              price = document.querySelector('#price').value;
+              paid = document.querySelector('#paid').checked;
+              _context13.next = 7;
+              return (0, _crud.addOneDocument)({
+                tour: tour,
+                user: user,
+                price: price,
+                paid: paid
+              }, 'bookings');
+
+            case 7:
+            case "end":
+              return _context13.stop();
+          }
+        }
+      }, _callee13);
+    }));
+
+    return function (_x13) {
+      return _ref13.apply(this, arguments);
+    };
+  }());
+}
+
+if (changeBookingForm) {
+  changeBookingForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee14(e) {
+      var tour, user, price, paid;
+      return regeneratorRuntime.wrap(function _callee14$(_context14) {
+        while (1) {
+          switch (_context14.prev = _context14.next) {
+            case 0:
+              e.preventDefault();
+              tour = document.querySelector('#tour').value;
+              user = document.querySelector('#user').value;
+              price = document.querySelector('#price').value;
+              paid = document.querySelector('#paid').checked;
+              _context14.next = 7;
+              return (0, _crud.updateOneDocument)({
+                tour: tour,
+                user: user,
+                price: price,
+                paid: paid
+              }, document.querySelector('#booking-id').value, 'bookings');
+
+            case 7:
+            case "end":
+              return _context14.stop();
+          }
+        }
+      }, _callee14);
+    }));
+
+    return function (_x14) {
+      return _ref14.apply(this, arguments);
+    };
+  }());
+}
+
+if (deleteBookingBtn) {
+  deleteBookingBtn.forEach(function (btn) {
+    btn.addEventListener('click', /*#__PURE__*/function () {
+      var _ref15 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee15(e) {
+        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+          while (1) {
+            switch (_context15.prev = _context15.next) {
+              case 0:
+                _context15.next = 2;
+                return (0, _crud.deleteOneDocument)(btn.dataset.bookingid, 'bookings');
+
+              case 2:
+              case "end":
+                return _context15.stop();
+            }
+          }
+        }, _callee15);
+      }));
+
+      return function (_x15) {
+        return _ref15.apply(this, arguments);
+      };
+    }());
+  });
 } // PREVIEW PHOTO
 
 
@@ -10325,46 +10425,46 @@ if (browseBtn) {
 
 if (accountSettingsForm) {
   accountSettingsForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee13(e) {
+    var _ref16 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee16(e) {
       var form;
-      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+      return regeneratorRuntime.wrap(function _callee16$(_context16) {
         while (1) {
-          switch (_context13.prev = _context13.next) {
+          switch (_context16.prev = _context16.next) {
             case 0:
               e.preventDefault();
               form = new FormData();
               (0, _fillOutTheForm.default)(form, 'users', 'email', 'name', 'photo');
-              _context13.next = 5;
+              _context16.next = 5;
               return (0, _updateSettings.default)(form, 'data');
 
             case 5:
             case "end":
-              return _context13.stop();
+              return _context16.stop();
           }
         }
-      }, _callee13);
+      }, _callee16);
     }));
 
-    return function (_x13) {
-      return _ref13.apply(this, arguments);
+    return function (_x16) {
+      return _ref16.apply(this, arguments);
     };
   }());
 }
 
 if (passwordChangeForm) {
   passwordChangeForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee14(e) {
+    var _ref17 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee17(e) {
       var passwordCurrent, password, passwordConfirm;
-      return regeneratorRuntime.wrap(function _callee14$(_context14) {
+      return regeneratorRuntime.wrap(function _callee17$(_context17) {
         while (1) {
-          switch (_context14.prev = _context14.next) {
+          switch (_context17.prev = _context17.next) {
             case 0:
               e.preventDefault();
               document.querySelector('button#save-new-password').textContent = 'UPDATING...';
               passwordCurrent = document.getElementById('passwordCurrent').value;
               password = document.getElementById('password').value;
               passwordConfirm = document.getElementById('passwordConfirm').value;
-              _context14.next = 7;
+              _context17.next = 7;
               return (0, _updateSettings.default)({
                 passwordCurrent: passwordCurrent,
                 password: password,
@@ -10379,14 +10479,14 @@ if (passwordChangeForm) {
 
             case 11:
             case "end":
-              return _context14.stop();
+              return _context17.stop();
           }
         }
-      }, _callee14);
+      }, _callee17);
     }));
 
-    return function (_x14) {
-      return _ref14.apply(this, arguments);
+    return function (_x17) {
+      return _ref17.apply(this, arguments);
     };
   }());
 }
@@ -10396,30 +10496,30 @@ if (alertMessage) alert(alertMessage);
 
 if (reviewForm) {
   reviewForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref15 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee15(e) {
+    var _ref18 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee18(e) {
       var _document$querySelect, _document$querySelect2;
 
       var content, rating;
-      return regeneratorRuntime.wrap(function _callee15$(_context15) {
+      return regeneratorRuntime.wrap(function _callee18$(_context18) {
         while (1) {
-          switch (_context15.prev = _context15.next) {
+          switch (_context18.prev = _context18.next) {
             case 0:
               e.preventDefault();
               content = (_document$querySelect = document.querySelector('#review')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.value;
               rating = (_document$querySelect2 = document.querySelector('#review-rating')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.value;
-              _context15.next = 5;
+              _context18.next = 5;
               return (0, _review.default)(content, rating);
 
             case 5:
             case "end":
-              return _context15.stop();
+              return _context18.stop();
           }
         }
-      }, _callee15);
+      }, _callee18);
     }));
 
-    return function (_x15) {
-      return _ref15.apply(this, arguments);
+    return function (_x18) {
+      return _ref18.apply(this, arguments);
     };
   }());
 }

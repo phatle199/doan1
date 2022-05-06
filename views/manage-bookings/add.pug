@@ -1,0 +1,34 @@
+extends ../account
+
+block userview
+  form.my-5.ml-3#add-new-booking-form
+    h4.mb-3.text-center ADD NEW BOOKING
+
+    .form-group
+      label(for="tour") Tour
+      select.form-control#tour(name="tour")
+        option(value="") --Choose a tour--
+        each tour in tours
+          option(value=`${tour._id}`)= tour.name
+      .invalid-feedback
+
+    .form-group
+      label(for="user") User
+      select.form-control#user(name="user")
+        option(value="") --Choose a user--
+        each user in users
+          option(value=`${user._id}`)= user.email
+      .invalid-feedback
+
+    .form-group
+      label(for="price") Price
+      input.form-control#price(type="number" min='1')
+      .invalid-feedback
+
+    .form-check.mb-3
+      label.form-check-label
+        input.form-check-input#paid(type="checkbox")
+        | Paid
+
+    button.btn.btn-success.btn-block(type="submit") Add
+    

@@ -42,4 +42,11 @@ router.get('/me/manage-reviews/add', viewController.getCreateReviewForm);
 router.get('/me/manage-reviews/:reviewId', viewController.getUpdateReviewForm);
 router.get('/me/manage-reviews', viewController.getReviewsList);
 
+router.get('/me/manage-bookings/add', viewController.getCreateBookingForm);
+router.get(
+  '/me/manage-bookings/:bookingId',
+  viewController.getUpdateBookingForm
+);
+router.get('/me/manage-bookings', viewController.getBookingsList);
+
 module.exports = router;
