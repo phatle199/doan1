@@ -118,7 +118,8 @@ if (addNewTourForm) {
       'summary',
       'description',
       'guides',
-      'imageCover'
+      'imageCover',
+      'images'
     );
 
     await addOneDocument(form, 'tours');

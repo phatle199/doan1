@@ -8,9 +8,9 @@ router
   .route('/')
   .get(tourController.getAllTours)
   .post(
-    tourController.uploadTourImageCover,
-    tourController.resizeTourImageCover,
-    tourController.getGuidesImageCoverLocations,
+    tourController.uploadImages,
+    tourController.resizeUploadImages,
+    tourController.getGuidesLocationsStartDates,
     tourController.createTour
   );
 
@@ -18,9 +18,9 @@ router
   .route('/:id')
   .get(tourController.getTour)
   .patch(
-    tourController.uploadTourImageCover,
-    tourController.resizeTourImageCover,
-    tourController.getGuidesImageCoverLocations,
+    tourController.uploadImages,
+    tourController.resizeUploadImages,
+    tourController.getGuidesLocationsStartDates,
     tourController.updateTour
   )
   .delete(tourController.deleteTour);

@@ -17,35 +17,64 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.uploadTourImageCover = upload.single('imageCover');
+exports.uploadImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
 
-exports.resizeTourImageCover = async (req, res, next) => {
-  if (!req.file) return next();
+exports.resizeUploadImages = async (req, res, next) => {
+  console.log(req.files);
+  if (!req.files) {
+    return next();
+  }
 
-  req.file.filename = `tour-${req.body.name}-${Date.now()}.jpeg`;
+  // resize and storage image cover
+  if (req.files['imageCover']) {
+    const imageCoverFileName = `tour-imageCover-${
+      req.body.name
+    }-${Date.now()}.jpeg`;
 
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/tours/${req.file.filename}`);
+    req.body.imageCover = imageCoverFileName;
+
+    await sharp(req.files['imageCover'][0].buffer)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/tours/${imageCoverFileName}`);
+  }
+
+  // resize and storage images
+  if (req.files['images']) {
+    req.body.images = [];
+    await Promise.all(
+      req.files['images'].map(async (file, i) => {
+        const newFilename = `tour-images-${i + 1}-${
+          req.body.name
+        }-${Date.now()}.jpeg`;
+
+        await sharp(file.buffer)
+          .resize(2000, 1333)
+          .toFormat('jpeg')
+          .jpeg({ quality: 90 })
+          .toFile(`public/img/tours/${newFilename}`);
+        req.body.images.push(newFilename);
+      })
+    );
+  }
 
   next();
 };
 
-exports.getGuidesImageCoverLocations = (req, res, next) => {
+exports.getGuidesLocationsStartDates = (req, res, next) => {
   if (req.body.guides && typeof req.body.guides === 'string') {
     req.body.guides = req.body.guides.split(',');
   } else if (req.body.guides === '') {
     req.body.guides = [];
   }
 
-  if (req.file) {
-    req.body.imageCover = req.file.filename;
-  }
-
   if (req.body.locations && typeof req.body.locations === 'string') {
     const locations = JSON.parse(req.body.locations);
+    const startDates = JSON.parse(req.body.startDates);
 
     formatedLocations = locations.map((item) => {
       return {
@@ -56,6 +85,7 @@ exports.getGuidesImageCoverLocations = (req, res, next) => {
     });
 
     req.body.locations = formatedLocations;
+    req.body.startDates = startDates;
   }
 
   next();

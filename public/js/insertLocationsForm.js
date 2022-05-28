@@ -31,6 +31,10 @@ const showLocationsFormButtonHandler = (showLocationsFormButton) => {
                 <label for="description${i}">Day</label>
                 <input class="form-control" id="day${i}" type="number" />
             </div>
+            <div class="form-group">
+                <label for="startDate${i}">Start date</label>
+                <input class="form-control" id="startDate${i}" type="date" />
+            </div>
         </div>`
       );
     }

@@ -1,5 +1,6 @@
 const errorMessageHandler = (error) => {
   let errorsArray;
+  console.log(error);
   // xử lý lỗi validation
   if (error.error?.name === 'ValidationError') {
     errorsArray = error.message

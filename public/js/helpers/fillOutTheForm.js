@@ -1,5 +1,5 @@
 const fillOutTheForm = (form, entity, ...fields) => {
-  const excludedFields = ['guides', 'photo', 'imageCover'];
+  const excludedFields = ['guides', 'photo', 'imageCover', 'images'];
   fields.forEach((field) => {
     // Nêu input là kiểu select (như guides) thì bỏ qua
     if (!excludedFields.includes(field)) {
@@ -25,13 +25,23 @@ const fillOutTheForm = (form, entity, ...fields) => {
     // }
 
     // Xử lý file upload
-    const imageCover = document.getElementById('imageCover').files[0];
+    const imageCover = document.getElementById('imageCover')?.files[0];
     if (imageCover) {
       form.append('imageCover', imageCover);
     }
 
-    // Xử lý nhập locations
+    // Xử lý upload nhiều files
+    const imagesLength = document.getElementById('images')?.files.length;
+    const images = document.getElementById('images')?.files;
+    if (images && imagesLength != 0) {
+      for (let i = 0; i < imagesLength; i++) {
+        form.append('images', images[i]);
+      }
+    }
+
+    // Xử lý nhập locations, startDates
     const locations = [];
+    const startDates = [];
     const totalNumberOfLocations = document.querySelectorAll(
       'div.row#locations-container>div.col-6'
     ).length;
@@ -44,9 +54,12 @@ const fillOutTheForm = (form, entity, ...fields) => {
           `description${i + 1}`
         ).value;
         const day = document.getElementById(`day${i + 1}`).value;
+        const startDate = document.getElementById(`startDate${i + 1}`).value;
         locations.push({ longtitude, latitude, description, day });
+        startDates.push(startDate);
       }
       form.append('locations', JSON.stringify(locations));
+      form.append('startDates', JSON.stringify(startDates));
     }
   }
 
@@ -56,6 +69,10 @@ const fillOutTheForm = (form, entity, ...fields) => {
     if (photo) {
       form.append('photo', photo);
     }
+  }
+
+  for (const i of form) {
+    console.log(i[0], i[1]);
   }
 };
 

@@ -8775,7 +8775,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var errorMessageHandler = function errorMessageHandler(error) {
   var _error$error, _error$error2;
 
-  var errorsArray; // xử lý lỗi validation
+  var errorsArray;
+  console.log(error); // xử lý lỗi validation
 
   if (((_error$error = error.error) === null || _error$error === void 0 ? void 0 : _error$error.name) === 'ValidationError') {
     errorsArray = error.message.slice(error.message.indexOf('failed: ') + 'failed: '.length).split(', '); // ['description: Một tour phải có mô tả', 'summary: Một tour phải có tóm tắt']
@@ -9215,7 +9216,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var fillOutTheForm = function fillOutTheForm(form, entity) {
-  var excludedFields = ['guides', 'photo', 'imageCover'];
+  var excludedFields = ['guides', 'photo', 'imageCover', 'images'];
 
   for (var _len = arguments.length, fields = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     fields[_key - 2] = arguments[_key];
@@ -9229,6 +9230,8 @@ var fillOutTheForm = function fillOutTheForm(form, entity) {
   }); // Nêu điền form tours
 
   if (entity === 'tours') {
+    var _document$getElementB, _document$getElementB2, _document$getElementB3;
+
     // Xử lý multiple select
     var selectGuideOptions = document.getElementById('guides').options;
     var selectedGuides = [];
@@ -9255,31 +9258,45 @@ var fillOutTheForm = function fillOutTheForm(form, entity) {
     // }
     // Xử lý file upload
 
-    var imageCover = document.getElementById('imageCover').files[0];
+    var imageCover = (_document$getElementB = document.getElementById('imageCover')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.files[0];
 
     if (imageCover) {
       form.append('imageCover', imageCover);
-    } // Xử lý nhập locations
+    } // Xử lý upload nhiều files
+
+
+    var imagesLength = (_document$getElementB2 = document.getElementById('images')) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.files.length;
+    var images = (_document$getElementB3 = document.getElementById('images')) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.files;
+
+    if (images && imagesLength != 0) {
+      for (var i = 0; i < imagesLength; i++) {
+        form.append('images', images[i]);
+      }
+    } // Xử lý nhập locations, startDates
 
 
     var locations = [];
+    var startDates = [];
     var totalNumberOfLocations = document.querySelectorAll('div.row#locations-container>div.col-6').length;
 
     if (totalNumberOfLocations) {
-      for (var i = 0; i < totalNumberOfLocations; i++) {
-        var longtitude = document.getElementById("longtitude".concat(i + 1)).value;
-        var latitude = document.getElementById("latitude".concat(i + 1)).value;
-        var description = document.getElementById("description".concat(i + 1)).value;
-        var day = document.getElementById("day".concat(i + 1)).value;
+      for (var _i = 0; _i < totalNumberOfLocations; _i++) {
+        var longtitude = document.getElementById("longtitude".concat(_i + 1)).value;
+        var latitude = document.getElementById("latitude".concat(_i + 1)).value;
+        var description = document.getElementById("description".concat(_i + 1)).value;
+        var day = document.getElementById("day".concat(_i + 1)).value;
+        var startDate = document.getElementById("startDate".concat(_i + 1)).value;
         locations.push({
           longtitude: longtitude,
           latitude: latitude,
           description: description,
           day: day
         });
+        startDates.push(startDate);
       }
 
       form.append('locations', JSON.stringify(locations));
+      form.append('startDates', JSON.stringify(startDates));
     }
   }
 
@@ -9292,6 +9309,20 @@ var fillOutTheForm = function fillOutTheForm(form, entity) {
     if (photo) {
       form.append('photo', photo);
     }
+  }
+
+  var _iterator2 = _createForOfIteratorHelper(form),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _i2 = _step2.value;
+      console.log(_i2[0], _i2[1]);
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
   }
 };
 
@@ -9430,7 +9461,7 @@ var showLocationsFormButtonHandler = function showLocationsFormButtonHandler(sho
     locationsFormContainer.innerHTML = '';
 
     for (var i = 1; i < totalNumberOfLocations + 1; i++) {
-      locationsFormContainer.insertAdjacentHTML('beforeend', "<div class=\"col-6\">\n            <p class=\"text-center mt-2 font-weight-bold\">Location ".concat(i, "</p>\n            <div class=\"form-group\">\n                <label for=\"longtitude").concat(i, "\">Longtitude</label>\n                <input class=\"form-control\" id=\"longtitude").concat(i, "\" type=\"number\" step=\"any\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"latitude").concat(i, "\">Latitude</label>\n                <input class=\"form-control\" id=\"latitude").concat(i, "\" type=\"number\" step=\"any\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"description").concat(i, "\">Description</label>\n                <input class=\"form-control\" id=\"description").concat(i, "\" type=\"text\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"description").concat(i, "\">Day</label>\n                <input class=\"form-control\" id=\"day").concat(i, "\" type=\"number\" />\n            </div>\n        </div>"));
+      locationsFormContainer.insertAdjacentHTML('beforeend', "<div class=\"col-6\">\n            <p class=\"text-center mt-2 font-weight-bold\">Location ".concat(i, "</p>\n            <div class=\"form-group\">\n                <label for=\"longtitude").concat(i, "\">Longtitude</label>\n                <input class=\"form-control\" id=\"longtitude").concat(i, "\" type=\"number\" step=\"any\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"latitude").concat(i, "\">Latitude</label>\n                <input class=\"form-control\" id=\"latitude").concat(i, "\" type=\"number\" step=\"any\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"description").concat(i, "\">Description</label>\n                <input class=\"form-control\" id=\"description").concat(i, "\" type=\"text\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"description").concat(i, "\">Day</label>\n                <input class=\"form-control\" id=\"day").concat(i, "\" type=\"number\" />\n            </div>\n            <div class=\"form-group\">\n                <label for=\"startDate").concat(i, "\">Start date</label>\n                <input class=\"form-control\" id=\"startDate").concat(i, "\" type=\"date\" />\n            </div>\n        </div>"));
     }
   });
 };
@@ -10045,7 +10076,7 @@ if (addNewTourForm) {
             case 0:
               e.preventDefault();
               form = new FormData();
-              (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides', 'imageCover');
+              (0, _fillOutTheForm.default)(form, 'tours', 'name', 'price', 'duration', 'difficulty', 'maxGroupSize', 'summary', 'description', 'guides', 'imageCover', 'images');
               _context4.next = 5;
               return (0, _crud.addOneDocument)(form, 'tours');
 
