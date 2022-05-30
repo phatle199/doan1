@@ -22,8 +22,10 @@ block userview
         th #
         th Tour
         th User
+        th Phone Number
         th Price
         th Paid
+        th Approved
         th Created at
         th
       tbody
@@ -34,8 +36,10 @@ block userview
             td= i
             td= booking.tour.name
             td= booking.user.name
+            td= booking.user.phoneNumber
             td= booking.price
             td= booking.paid
+            td= booking.approved
             td= booking.createdAt.toLocaleDateString()
             td.d-flex.justify-content-around
               a.btn.btn-info(href=`/me/manage-bookings/${booking._id}`)

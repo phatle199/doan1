@@ -4,6 +4,8 @@ block userview
   form.my-5.ml-3#change-booking-form
     h4.mb-3.text-center Update Booking
 
+    p.text-center.text-danger#commonError
+
     .form-group
       label(for="booking-id") Id
       input.form-control#booking-id(type="text" value=`${booking._id}` disabled)
@@ -26,6 +28,11 @@ block userview
         each user in restOfUsers
             option(value=`${user._id}`)= user.email
       .invalid-feedback
+
+      .form-group
+      label(for="phoneNumber") Phone Number
+      input.form-control#phoneNumber(type="text" value=`${booking.phoneNumber}`)
+      .invalid-feedback
     
     .form-group
       label(for="price") Price
@@ -40,6 +47,15 @@ block userview
         else
           input.form-check-input#paid(type="checkbox")
           | Paid
+
+    .form-check.mb-3
+      label.form-check-label
+        if booking.approved
+          input.form-check-input#approved(type="checkbox" checked)
+          | Approved
+        else
+          input.form-check-input#approved(type="checkbox")
+          | Approved
 
     button.btn.btn-success.btn-block(type="submit") Save changes
     

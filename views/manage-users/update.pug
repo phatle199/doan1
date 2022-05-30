@@ -26,6 +26,11 @@ block userview
       .invalid-feedback
 
     .form-group
+      label(for="phoneNumber") Phone Number
+      input.form-control#phoneNumber(type="text" value=`${selectedUser.phoneNumber}`)
+      .invalid-feedback
+
+    .form-group
       label(for="email") Email Address
       input.form-control#email(type="email" value=`${selectedUser.email}`)
       .invalid-feedback

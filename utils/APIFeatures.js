@@ -27,6 +27,8 @@ class APIFeatures {
       let { sort: sortStr } = this.reqQuery;
       sortStr = sortStr.replace(/,/g, ' ');
       this.query = this.query.sort(sortStr);
+    } else {
+      this.query = this.query.sort('-createdAt');
     }
 
     return this;

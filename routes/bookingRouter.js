@@ -8,14 +8,20 @@ router.use(authController.protect);
 
 router
   .route('/checkout-session/:tourId')
-  .get(bookingController.getCheckoutSession);
+  .get(
+    bookingController.checkIfThereAreTicketsAvailable,
+    bookingController.getCheckoutSession
+  );
 
 router.use(authController.restrictTo('admin', 'lead-guide'));
 
 router
   .route('/')
   .get(bookingController.getAllBookings)
-  .post(bookingController.createBooking);
+  .post(
+    bookingController.checkIfThereAreTicketsAvailable,
+    bookingController.createBooking
+  );
 
 router
   .route('/:id')

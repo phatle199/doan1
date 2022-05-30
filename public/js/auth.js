@@ -2,13 +2,14 @@ import axios from 'axios';
 import catchAsync from './helpers/catchAsync';
 
 export const signup = catchAsync(
-  async (name, email, password, passwordConfirm) => {
+  async (name, email, phoneNumber, password, passwordConfirm) => {
     const res = await axios({
       method: 'post',
       url: '/api/v1/users/signup',
       data: {
         name,
         email,
+        phoneNumber,
         password,
         passwordConfirm,
       },

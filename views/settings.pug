@@ -10,7 +10,12 @@ block userview
 
     div(class="form-group")
       label(for="name") Name
-      input(type="name" class="form-control" id="name" value=`${user.name}`)
+      input(type="text" class="form-control" id="name" value=`${user.name}`)
+      .invalid-feedback
+
+    div(class="form-group")
+      label(for="phoneNumber") Phone Number
+      input(type="text" class="form-control" id="phoneNumber" value=`${user.phoneNumber}`)
       .invalid-feedback
 
     // FILE UPLOAD INPUT

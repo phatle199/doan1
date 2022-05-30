@@ -58,7 +58,12 @@ exports.updateMyData = catchAsync(async (req, res, next) => {
   }
 
   // Filter update fields
-  const filteredObject = filterUpdateFields(req.body, 'name', 'email');
+  const filteredObject = filterUpdateFields(
+    req.body,
+    'name',
+    'email',
+    'phoneNumber'
+  );
 
   // Update photo
   if (req.file) {

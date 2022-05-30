@@ -11,6 +11,10 @@ const bookingSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'A booking must belongs to a user'],
   },
+  phoneNumber: {
+    type: String,
+    required: [true, 'Customer phone number is required'],
+  },
   price: {
     type: Number,
     required: 'A booking must has a price',
@@ -19,11 +23,18 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  approved: {
+    type: Boolean,
+    default: false,
+  },
   paid: {
     type: Boolean,
     default: true,
   },
 });
+
+// 1 người dùng chỉ đặt tour đó 1 lần
+bookingSchema.index({ tour: 1, user: 1 }, { unique: true });
 
 bookingSchema.pre(/^find/, function (next) {
   this.populate('user').populate({

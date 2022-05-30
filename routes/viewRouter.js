@@ -48,5 +48,6 @@ router.get(
   viewController.getUpdateBookingForm
 );
 router.get('/me/manage-bookings', viewController.getBookingsList);
+router.get('/me/report', viewController.report);
 
 module.exports = router;

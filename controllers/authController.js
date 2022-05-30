@@ -35,10 +35,11 @@ const createAndSendToken = (user, res, req, statusCode) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm } = req.body;
+  const { name, email, phoneNumber, password, passwordConfirm } = req.body;
   const user = await User.create({
     name,
     email,
+    phoneNumber,
     password,
     passwordConfirm,
   });

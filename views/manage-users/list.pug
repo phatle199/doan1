@@ -22,6 +22,7 @@ block userview
         th #
         th Name
         th Email Address
+        th Phone Number
         th Role
         th Active
         th
@@ -33,6 +34,7 @@ block userview
             td= i
             td= user.name
             td= user.email
+            td= user.phoneNumber
             td= user.role
             td= `${user.active ? 'yes' : 'no'}`
             td.d-flex.justify-content-around
@@ -94,6 +96,7 @@ block userview
               .col-6
                 +details('Name', user.name)
                 +details('Email', user.email)
+                +details('Phone Number', user.phoneNumber)
                 - const passwordChangedAt = user.passwordChangedAt ? new Date(user.passwordChangedAt).toLocaleString("vi") : 'Not changed yet';
                 +details('Password Changed At', passwordChangedAt)
                 +details('Role', user.role)

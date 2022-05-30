@@ -4,6 +4,27 @@ const User = require('./../models/userModel');
 const Booking = require('./../models/bookingModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./../controllers/handlerFactory');
+const AppError = require('../utils/AppError');
+
+exports.checkIfThereAreTicketsAvailable = catchAsync(async (req, res, next) => {
+  // 1. Lấy số lượng vé tối đa
+  const maxGroupSize = (await Tour.findById(req.params.tourId ?? req.body.tour))
+    .maxGroupSize;
+  console.log(maxGroupSize);
+  // 2. Lấy số lượng vé tour này đã được đặt
+  const numberOfTicketsBooked = await Booking.countDocuments({
+    tour: req.params.tourId ?? req.body.tour,
+  });
+
+  // 3. Nếu số vé đã bán bằng hoặc lớn hơn số vé tối đa => ko cho đặt nữa
+  if (numberOfTicketsBooked >= maxGroupSize) {
+    return next(
+      new AppError('Booked tour unsuccessfull. Out of tickets!', 400)
+    );
+  }
+
+  next();
+});
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1. Lấy tour đang được đặt
@@ -18,7 +39,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     success_url: `${req.protocol}://${req.get(
       'host'
     )}/me/my-tours?alert=booking`,
-    cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour._id}`,
+    cancel_url: `${req.protocol}://${req.get('host')}/tours/${tour._id}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
     line_items: [
@@ -54,10 +75,12 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 // });
 
 const createBookingCheckout = async (session) => {
+  const currentUser = await User.findOne({ email: session.customer_email });
   const tour = session.client_reference_id;
-  const user = (await User.findOne({ email: session.customer_email }))._id;
+  const user = currentUser._id;
+  const phoneNumber = currentUser.phoneNumber;
   const price = session.amount_total / 100;
-  await Booking.create({ tour, user, price });
+  await Booking.create({ tour, user, phoneNumber, price });
 };
 
 exports.webhookCheckout = (req, res, next) => {

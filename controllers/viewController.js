@@ -99,7 +99,7 @@ exports.getToursList = async (req, res, next) => {
   if (!req.query.page) req.query.page = 1;
   const numberOfTours = await Tour.count();
 
-  const features = new APIFeatures(Tour.find({}), req.query).paginate();
+  const features = new APIFeatures(Tour.find({}), req.query).sort().paginate();
 
   const tours = await features.query;
 
@@ -160,7 +160,7 @@ exports.getCreateTourForm = async (req, res, next) => {
 exports.getUsersList = async (req, res, next) => {
   if (!req.query.page) req.query.page = 1;
   const numberOfTours = await User.count();
-  const features = new APIFeatures(User.find({}), req.query).paginate();
+  const features = new APIFeatures(User.find({}), req.query).sort().paginate();
 
   const users = await features.query;
 
@@ -199,7 +199,9 @@ exports.getCreateUserForm = (req, res) => {
 exports.getReviewsList = async (req, res, next) => {
   if (!req.query.page) req.query.page = 1;
   const numberOfReviews = await Review.count();
-  const features = new APIFeatures(Review.find({}), req.query).paginate();
+  const features = new APIFeatures(Review.find({}), req.query)
+    .sort()
+    .paginate();
 
   const reviews = await features.query;
 
@@ -260,7 +262,9 @@ exports.getCreateReviewForm = async (req, res) => {
 exports.getBookingsList = async (req, res, next) => {
   if (!req.query.page) req.query.page = 1;
   const numberOfBookings = await Booking.count();
-  const features = new APIFeatures(Booking.find({}), req.query).paginate();
+  const features = new APIFeatures(Booking.find({}), req.query)
+    .sort()
+    .paginate();
 
   const bookings = await features.query;
 
@@ -314,5 +318,52 @@ exports.getCreateBookingForm = async (req, res) => {
     server: 1,
     tours,
     users,
+  });
+};
+
+exports.report = async (req, res) => {
+  const tours = await Tour.find();
+
+  const data = await Promise.all(
+    tours.map(async (tour) => {
+      const numberOfPeopleBooked = await Booking.countDocuments({
+        tour: tour._id,
+      });
+      const approvedOrderQuantity = await Booking.countDocuments({
+        tour: tour._id,
+        approved: 'true',
+      });
+
+      const amount =
+        (
+          await Booking.aggregate([
+            {
+              $match: { tour: tour._id },
+            },
+            {
+              $group: {
+                _id: null,
+                amount: { $sum: '$price' },
+              },
+            },
+          ])
+        )[0]?.amount ?? 0;
+
+      return {
+        tourName: tour.name,
+        maxGroupSize: tour.maxGroupSize,
+        startDate: tour.startDates[0],
+        numberOfPeopleBooked: numberOfPeopleBooked,
+        approvedOrderQuantity: approvedOrderQuantity,
+        amount: amount,
+      };
+    })
+  );
+
+  res.status(200).render('manage-bookings/report', {
+    title: 'Report',
+    pathname: req.path,
+    server: 1,
+    data,
   });
 };

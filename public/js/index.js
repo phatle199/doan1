@@ -8,6 +8,7 @@ import showLocationsFormButtonHandler from './insertLocationsForm';
 import updateSettings from './updateSettings';
 import { bookTour } from './stripe';
 import addReview from './review';
+import autoFillRelatedField from './autoFillRelatedField';
 
 // DOM
 const signupForm = document.querySelector('#signup-form');
@@ -49,12 +50,14 @@ const bookTourBtn = document.querySelector('#booking-tour');
 
 const reviewForm = document.querySelector('#review-form');
 
+const tourSelectElement = document.querySelector('select#tour');
+const userSelectElement = document.querySelector('select#user');
+
 // ACTIONS
 if (bookTourBtn) {
   bookTourBtn.addEventListener('click', (e) => {
-    e.target.textContent = 'Processing...';
     const { tourId } = e.target.dataset;
-    bookTour(tourId);
+    await bookTour(tourId);
   });
 }
 
@@ -79,9 +82,10 @@ if (signupForm) {
     e.preventDefault();
     const name = document.querySelector('#name').value;
     const email = document.querySelector('#email').value;
+    const phoneNumber = document.querySelector('#phoneNumber').value;
     const password = document.querySelector('#password').value;
     const passwordConfirm = document.querySelector('#passwordConfirm').value;
-    await signup(name, email, password, passwordConfirm);
+    await signup(name, email, phoneNumber, password, passwordConfirm);
   });
 }
 
@@ -169,6 +173,7 @@ if (addNewUserForm) {
       'users',
       'name',
       'email',
+      'phoneNumber',
       'password',
       'passwordConfirm',
       'role'
@@ -189,11 +194,20 @@ if (changeUserForm) {
         'photo',
         'name',
         'email',
+        'phoneNumber',
         'password',
         'role'
       );
     } else {
-      fillOutTheForm(form, 'users', 'photo', 'name', 'email', 'role');
+      fillOutTheForm(
+        form,
+        'users',
+        'photo',
+        'name',
+        'email',
+        'phoneNumber',
+        'role'
+      );
     }
 
     await updateOneDocument(
@@ -255,9 +269,15 @@ if (addNewBookingForm) {
     e.preventDefault();
     const tour = document.querySelector('#tour').value;
     const user = document.querySelector('#user').value;
+    const phoneNumber = document.querySelector('#phoneNumber').value;
     const price = document.querySelector('#price').value;
     const paid = document.querySelector('#paid').checked;
-    await addOneDocument({ tour, user, price, paid }, 'bookings');
+    const approved = document.querySelector('#approved').checked;
+
+    await addOneDocument(
+      { tour, user, phoneNumber, price, paid, approved },
+      'bookings'
+    );
   });
 }
 
@@ -266,11 +286,13 @@ if (changeBookingForm) {
     e.preventDefault();
     const tour = document.querySelector('#tour').value;
     const user = document.querySelector('#user').value;
+    const phoneNumber = document.querySelector('#phoneNumber').value;
     const price = document.querySelector('#price').value;
     const paid = document.querySelector('#paid').checked;
+    const approved = document.querySelector('#approved').checked;
 
     await updateOneDocument(
-      { tour, user, price, paid },
+      { tour, user, phoneNumber, price, paid, approved },
       document.querySelector('#booking-id').value,
       'bookings'
     );
@@ -317,7 +339,7 @@ if (accountSettingsForm) {
     e.preventDefault();
 
     const form = new FormData();
-    fillOutTheForm(form, 'users', 'email', 'name', 'photo');
+    fillOutTheForm(form, 'users', 'email', 'name', 'phoneNumber', 'photo');
 
     await updateSettings(form, 'data');
   });
@@ -352,4 +374,8 @@ if (reviewForm) {
     const rating = document.querySelector('#rating').value;
     await addReview(content, rating);
   });
+}
+
+if (tourSelectElement && userSelectElement) {
+  autoFillRelatedField(tourSelectElement, userSelectElement);
 }

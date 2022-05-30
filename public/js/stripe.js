@@ -13,7 +13,8 @@ export const bookTour = async (tourId) => {
       sessionId: session.data.session.id,
     });
   } catch (err) {
-    console.log(err);
-    alert('error', err);
+    alert(
+      'Đặt tour thất bại. Bạn đã đặt tour này rồi hoặc tour này đã hết vé!'
+    );
   }
 };
