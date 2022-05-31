@@ -55,7 +55,7 @@ const userSelectElement = document.querySelector('select#user');
 
 // ACTIONS
 if (bookTourBtn) {
-  bookTourBtn.addEventListener('click', (e) => {
+  bookTourBtn.addEventListener('click', async (e) => {
     const { tourId } = e.target.dataset;
     await bookTour(tourId);
   });
