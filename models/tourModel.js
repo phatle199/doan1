@@ -32,14 +32,9 @@ const tourSchema = new mongoose.Schema(
     },
     images: {
       type: [String],
-      // validate: {
-      //   validator: (value) => Array.isArray(value) && value.length > 2,
-      //   message: 'A tour must have at least 3 images',
-      // },
     },
     imageCover: {
       type: String,
-      // required: [true, 'A tour must have at least 1 image cover'],
     },
     maxGroupSize: {
       type: Number,
@@ -99,9 +94,6 @@ const tourSchema = new mongoose.Schema(
         message: 'A tour must have at least 1 guide',
       },
     },
-    // reviews: {
-
-    // },
     createdAt: {
       type: Date,
       default: Date.now,
