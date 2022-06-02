@@ -121,6 +121,7 @@ exports.webhookCheckout = (req, res, next) => {
       process.env.STRIPE_WEBHOOK_KEY
     );
   } catch (err) {
+    console.log(err);
     res.status(200).send(`Webhook error: ${err.message}`);
   }
 
