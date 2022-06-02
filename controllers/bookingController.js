@@ -79,8 +79,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     ],
   });
 
-  session.ticketsQuantity = req.body.ticketsQuantity;
-
   // 3. Gửi session đi
   res.status(200).json({
     status: 'success',
@@ -104,10 +102,8 @@ const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = currentUser._id;
   const phoneNumber = currentUser.phoneNumber;
-  const price = await Tour.findById(tour).price;
-  const ticketsQuantity = session.ticketsQuantity;
-
-  console.log({ tour, user, phoneNumber, price, ticketsQuantity });
+  const price = (await Tour.findById(session.client_reference_id)).price;
+  const ticketsQuantity = session.amount_total / price;
 
   await Booking.create({ tour, user, phoneNumber, price, ticketsQuantity });
 };
