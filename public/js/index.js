@@ -271,11 +271,12 @@ if (addNewBookingForm) {
     const user = document.querySelector('#user').value;
     const phoneNumber = document.querySelector('#phoneNumber').value;
     const price = document.querySelector('#price').value;
+    const ticketsQuantity = document.querySelector('#ticketsQuantity').value;
     const paid = document.querySelector('#paid').checked;
     const approved = document.querySelector('#approved').checked;
 
     await addOneDocument(
-      { tour, user, phoneNumber, price, paid, approved },
+      { tour, user, phoneNumber, price, ticketsQuantity, paid, approved },
       'bookings'
     );
   });
@@ -292,7 +293,7 @@ if (changeBookingForm) {
     const approved = document.querySelector('#approved').checked;
 
     await updateOneDocument(
-      { tour, user, phoneNumber, price, paid, approved },
+      { tour, user, phoneNumber, price, ticketsQuantity, paid, approved },
       document.querySelector('#booking-id').value,
       'bookings'
     );

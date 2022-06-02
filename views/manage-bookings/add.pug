@@ -5,14 +5,6 @@ block userview
     h4.mb-3.text-center ADD NEW BOOKING
 
     p.text-center.text-danger#commonError
-    
-    .form-group
-      label(for="tour") Tour
-      select.form-control#tour(name="tour")
-        option(value="") --Choose a tour--
-        each tour in tours
-          option(value=`${tour._id}`)= tour.name
-      .invalid-feedback
 
     .form-group
       label(for="user") User
@@ -23,6 +15,14 @@ block userview
       .invalid-feedback
 
     .form-group
+      label(for="tour") Tour
+      select.form-control#tour(name="tour")
+        option(value="") --Choose a tour--
+        each tour in tours
+          option(value=`${tour._id}`)= tour.name
+      .invalid-feedback
+
+    .form-group
       label(for="phoneNumber") Phone Number
       input.form-control#phoneNumber(type="text")
       .invalid-feedback
@@ -30,6 +30,11 @@ block userview
     .form-group
       label(for="price") Price
       input.form-control#price(type="number" min='1')
+      .invalid-feedback
+
+    .form-group
+      label(for="ticketsQuantity") Tickets quantity
+      input.form-control#ticketsQuantity(type="number" min='1')
       .invalid-feedback
 
     .form-check.mb-3

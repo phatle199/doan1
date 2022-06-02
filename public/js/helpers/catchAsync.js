@@ -1,6 +1,11 @@
 const errorMessageHandler = (error) => {
   let errorsArray;
   console.log(error);
+  // xử lý lỗi hết vé hoặc không đủ vé khi đặt tour
+  if (error?.message.startsWith('Đặt tour thất bại.')) {
+    alert(error.message);
+  }
+
   // xử lý lỗi validation
   if (error.error?.name === 'ValidationError') {
     errorsArray = error.message

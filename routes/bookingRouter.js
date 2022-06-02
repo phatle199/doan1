@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(authController.protect);
 
 router
-  .route('/checkout-session/:tourId')
+  .route('/checkout-session/:tourId/:ticketsQuantity')
   .get(
     bookingController.checkIfThereAreTicketsAvailable,
     bookingController.getCheckoutSession

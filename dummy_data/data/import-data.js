@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const Tour = require('../../models/tourModel');
 const User = require('../../models/userModel');
 const Review = require('../../models/reviewModel');
+const Booking = require('../../models/bookingModel');
 
 // console.log(`${__dirname}/../config.env`);
 dotenv.config({ path: `${__dirname}/../../config.env` });
@@ -45,7 +46,7 @@ const importDummyData = async () => {
   try {
     // await Tour.create(DUMMY_TOURS, { validateBeforeSave: false });
     // await User.create(DUMMY_USERS, { validateBeforeSave: false });
-    await Review.create(DUMMY_REVIEWS, { validateBeforeSave: false });
+    // await Review.create(DUMMY_REVIEWS, { validateBeforeSave: false });
 
     console.log('Imported dummy data successfully 👍');
   } catch (err) {
@@ -58,7 +59,8 @@ const deleteDataFromACollections = async () => {
   try {
     // await Tour.deleteMany();
     // await User.deleteMany();
-    await Review.deleteMany();
+    // await Review.deleteMany();
+    await Booking.deleteMany();
     console.log('Deleted data successfully 👍');
   } catch (err) {
     console.log('Something went wrong when deleting data 💥', err);

@@ -12,21 +12,21 @@ block userview
       .invalid-feedback
 
     .form-group
-      label(for="tour") Tour
-      select.form-control#tour(name="tour")
-        option(value="") --Choose a tour--
-        option(selected value=`${booking.tour._id}`)= booking.tour.name
-        each tour in restOfTours
-            option(value=`${tour._id}`)= tour.name
-      .invalid-feedback
-
-    .form-group
       label(for="user") User
       select.form-control#user(name="user")
         option(value="") --Choose a user--
         option(selected value=`${booking.user._id}`)= booking.user.email
         each user in restOfUsers
             option(value=`${user._id}`)= user.email
+      .invalid-feedback
+
+    .form-group
+      label(for="tour") Tour
+      select.form-control#tour(name="tour")
+        option(value="") --Choose a tour--
+        option(selected value=`${booking.tour._id}`)= booking.tour.name
+        each tour in restOfTours
+            option(value=`${tour._id}`)= tour.name
       .invalid-feedback
 
       .form-group
@@ -37,6 +37,11 @@ block userview
     .form-group
       label(for="price") Price
       input.form-control#price(type="number" min='1' value=`${booking.price}`)
+      .invalid-feedback
+
+    .form-group
+      label(for="ticketsQuantity") Tickets quantity
+      input.form-control#ticketsQuantity(type="number" min='1' value=`${booking.ticketsQuantity}`)
       .invalid-feedback
 
     .form-check.mb-3

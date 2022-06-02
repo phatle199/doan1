@@ -17,7 +17,14 @@ const bookingSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: 'A booking must has a price',
+    required: [true, 'A booking must has a price'],
+  },
+  ticketsQuantity: {
+    type: Number,
+    required: [true, 'Đơn đặt tour phải có số lượng vé'],
+  },
+  totalMoney: {
+    type: Number,
   },
   createdAt: {
     type: Date,
@@ -41,6 +48,12 @@ bookingSchema.pre(/^find/, function (next) {
     path: 'tour',
     select: 'name',
   });
+  next();
+});
+
+// Tính thành tiền trước khi lưu
+bookingSchema.pre('save', function (next) {
+  this.totalMoney = this.price * this.ticketsQuantity;
   next();
 });
 

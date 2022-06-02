@@ -7,22 +7,45 @@ const factory = require('./../controllers/handlerFactory');
 const AppError = require('../utils/AppError');
 
 exports.checkIfThereAreTicketsAvailable = catchAsync(async (req, res, next) => {
-  // 1. Lấy số lượng vé tối đa
-  const maxGroupSize = (await Tour.findById(req.params.tourId ?? req.body.tour))
-    .maxGroupSize;
-  console.log(maxGroupSize);
-  // 2. Lấy số lượng vé tour này đã được đặt
-  const numberOfTicketsBooked = await Booking.countDocuments({
-    tour: req.params.tourId ?? req.body.tour,
-  });
+  // 1. Lấy tour đang được đặt
+  const tour = await Tour.findById(req.params.tourId ?? req.body.tour);
 
-  // 3. Nếu số vé đã bán bằng hoặc lớn hơn số vé tối đa => ko cho đặt nữa
-  if (numberOfTicketsBooked >= maxGroupSize) {
-    return next(
-      new AppError('Booked tour unsuccessfull. Out of tickets!', 400)
-    );
+  // 2. Lấy số lượng vé tối đa
+  const maxGroupSize = tour.maxGroupSize;
+
+  // 3. Lấy số vé đang đặt
+  const ticketsQuantity = Number(
+    req.body.ticketsQuantity ?? req.params.ticketsQuantity
+  );
+
+  // 4. Lấy số lượng vé tour này đã được đặt
+  const numberOfTicketsBooked =
+    (
+      await Booking.aggregate([
+        {
+          $match: { tour: tour._id },
+        },
+        {
+          $group: {
+            _id: null,
+            numberOfTicketsBooked: { $sum: '$ticketsQuantity' },
+          },
+        },
+      ])
+    )[0]?.numberOfTicketsBooked ?? 0;
+
+  // 5. Nếu số vé được đặt + số vé tour đã dược đặt > số lượng thành viên tôi đa của tour => ko cho đặt nữa
+  if (numberOfTicketsBooked + ticketsQuantity > maxGroupSize) {
+    const numberOfTicketsAvailable = maxGroupSize - numberOfTicketsBooked;
+    const msg =
+      numberOfTicketsAvailable === 0
+        ? 'Tour này đã bán hết vé.'
+        : `Hiện chỉ còn ${numberOfTicketsAvailable} vé.`;
+
+    return next(new AppError(`Đặt tour thất bại. ${msg}`, 400));
   }
 
+  req.body.ticketsQuantity = ticketsQuantity;
   next();
 });
 
@@ -49,12 +72,14 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         images: [
           `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
         ],
-        amount: tour.price * 100,
+        amount: tour.price * 100 * req.body.ticketsQuantity,
         currency: 'usd',
-        quantity: 1,
+        quantity: req.body.ticketsQuantity,
       },
     ],
   });
+
+  session.ticketsQuantity = req.body.ticketsQuantity;
 
   // 3. Gửi session đi
   res.status(200).json({
@@ -79,8 +104,10 @@ const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = currentUser._id;
   const phoneNumber = currentUser.phoneNumber;
-  const price = session.amount_total / 100;
-  await Booking.create({ tour, user, phoneNumber, price });
+  const price = await Tour.findById(tour).price;
+  const ticketsQuantity = session.ticketsQuantity;
+
+  await Booking.create({ tour, user, phoneNumber, price, ticketsQuantity });
 };
 
 exports.webhookCheckout = (req, res, next) => {
@@ -97,6 +124,7 @@ exports.webhookCheckout = (req, res, next) => {
     res.status(200).send(`Webhook error: ${err.message}`);
   }
 
+  console.log(event.type === 'checkout.session.completed', event.data.object);
   if (event.type === 'checkout.session.completed')
     createBookingCheckout(event.data.object);
 

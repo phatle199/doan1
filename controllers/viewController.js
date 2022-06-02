@@ -343,7 +343,7 @@ exports.report = async (req, res) => {
             {
               $group: {
                 _id: null,
-                amount: { $sum: '$price' },
+                amount: { $sum: '$totalMoney' },
               },
             },
           ])

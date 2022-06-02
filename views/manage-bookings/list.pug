@@ -14,19 +14,21 @@ mixin pageItem(pageNumber)
 
 block userview
   - currentPage = currentPage < 1 ? 1 : currentPage
-  p.text-center.display-4 LIST OF BOOKINGS
+  p.text-center.display-4 DANH SÁCH CÁC TOUR
 
-  a.btn.btn-primary.mb-3(href="/me/manage-bookings/add") Add New Booking
+  a.btn.btn-primary.mb-3(href="/me/manage-bookings/add") Thêm tour mới
   table.table.table-hover
       thead.thead-dark
         th #
-        th Tour
-        th User
-        th Phone Number
+        th Tên tour
+        th Người đặt
+        th Số điện thoại
         th Price
-        th Paid
-        th Approved
-        th Created at
+        th Số lượng vé
+        th Đã thanh toán
+        th Đã duyệt
+        th Thành tiền
+        th Ngày tạo
         th
       tbody
         - let i = (currentPage - 1) * 5;
@@ -38,8 +40,10 @@ block userview
             td= booking.user.name
             td= booking.user.phoneNumber
             td= booking.price
+            td= booking.ticketsQuantity
             td= booking.paid
             td= booking.approved
+            td= booking.totalMoney
             td= booking.createdAt.toLocaleDateString()
             td.d-flex.justify-content-around
               a.btn.btn-info(href=`/me/manage-bookings/${booking._id}`)
