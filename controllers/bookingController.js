@@ -103,7 +103,7 @@ const createBookingCheckout = async (session) => {
   const user = currentUser._id;
   const phoneNumber = currentUser.phoneNumber;
   const price = (await Tour.findById(session.client_reference_id)).price;
-  const ticketsQuantity = session.amount_total / price;
+  const ticketsQuantity = session.amount_total / price / 100;
 
   await Booking.create({ tour, user, phoneNumber, price, ticketsQuantity });
 };
