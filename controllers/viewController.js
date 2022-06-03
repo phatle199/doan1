@@ -334,20 +334,23 @@ exports.report = async (req, res) => {
         approved: 'true',
       });
 
-      const amount =
-        (
-          await Booking.aggregate([
-            {
-              $match: { tour: tour._id },
+      const result = (
+        await Booking.aggregate([
+          {
+            $match: { tour: tour._id },
+          },
+          {
+            $group: {
+              _id: null,
+              amount: { $sum: '$totalMoney' },
+              ticketsQty: { $sum: '$ticketsQuantity' },
             },
-            {
-              $group: {
-                _id: null,
-                amount: { $sum: '$totalMoney' },
-              },
-            },
-          ])
-        )[0]?.amount ?? 0;
+          },
+        ])
+      )[0];
+
+      amount = result?.amount ?? 0;
+      ticketsQty = result?.ticketsQty ?? 0;
 
       return {
         tourName: tour.name,
@@ -356,9 +359,12 @@ exports.report = async (req, res) => {
         numberOfPeopleBooked: numberOfPeopleBooked,
         approvedOrderQuantity: approvedOrderQuantity,
         amount: amount,
+        ticketsQuantity: ticketsQty,
       };
     })
   );
+
+  console.log(data);
 
   res.status(200).render('manage-bookings/report', {
     title: 'Report',

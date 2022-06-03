@@ -16,14 +16,13 @@ block userview
   - currentPage = currentPage < 1 ? 1 : currentPage
   p.text-center.display-4 DANH SÁCH CÁC TOUR
 
-  a.btn.btn-primary.mb-3(href="/me/manage-bookings/add") Thêm tour mới
+  a.btn.btn-primary.mb-3(href="/me/manage-bookings/add") Thêm booking mới
   table.table.table-hover
       thead.thead-dark
         th #
         th Tên tour
         th Người đặt
         th Số điện thoại
-        th Price
         th Số lượng vé
         th Đã thanh toán
         th Đã duyệt
@@ -39,7 +38,6 @@ block userview
             td= booking.tour.name
             td= booking.user.name
             td= booking.user.phoneNumber
-            td= booking.price
             td= booking.ticketsQuantity
             td= booking.paid
             td= booking.approved
